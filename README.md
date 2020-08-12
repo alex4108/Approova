@@ -1,8 +1,17 @@
-# Approova
+# Approova Discord Bot
+
+[![GitHub issues](https://img.shields.io/github/issues/alex4108/Approova)](https://github.com/alex4108/Approova/issues)
+[![GitHub forks](https://img.shields.io/github/forks/alex4108/Approova)](https://github.com/alex4108/Approova/network)
+[![GitHub stars](https://img.shields.io/github/stars/alex4108/Approova)](https://github.com/alex4108/Approova/stargazers)
+[![GitHub license](https://img.shields.io/github/license/alex4108/Approova)](https://github.com/alex4108/Approova/blob/master/LICENSE)
+![GitHub All Releases](https://img.shields.io/github/downloads/alex4108/Approova/total)
+![GitHub contributors](https://img.shields.io/github/contributors/alex4108/Approova)
 
 ## Purpose
 
 Let existing users of a discord guild approve new joins
+
+Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-schittko)
 
 ## Basic flow
 
