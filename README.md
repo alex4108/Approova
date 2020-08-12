@@ -29,7 +29,7 @@ _Bot will listen with prefix * and will only listen to the Guild owner!__
 1. `*setApprovalRole <name of role>` to set the role to assign on approval
 1. `*setPublicChannel <name of channel>` to set the public room for announcements
 1. `*setPublicRole Channel <name of channel>` to set the public room for announcements
-1. Move `Whitelister` role to top of roles list in Discord Guild Settings
+1. Move `Approova` role to top of roles list in Discord Guild Settings
 
 ## Starting the server
 
