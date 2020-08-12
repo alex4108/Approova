@@ -6,7 +6,9 @@
 [![GitHub license](https://img.shields.io/github/license/alex4108/Approova)](https://github.com/alex4108/Approova/blob/master/LICENSE)
 ![GitHub All Releases](https://img.shields.io/github/downloads/alex4108/Approova/total)
 ![GitHub contributors](https://img.shields.io/github/contributors/alex4108/Approova)
+[![Discord](https://img.shields.io/discord/742969076623605830)](https://discord.gg/FpDjFEQ)
 
+[![Join Us in Discord](https://user-images.githubusercontent.com/7796475/89976812-2628c080-dc2f-11ea-92a1-fe87b6a9cf92.jpg)](https://discord.gg/FpDjFEQ)
 ## Purpose
 
 Let existing users of a discord guild approve new joins
