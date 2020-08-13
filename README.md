@@ -24,9 +24,9 @@ Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-sch
 
 _Bot will listen with prefix * and will only listen to the Guild owner!__
 
-1. Join the bot to your server [LIVE](https://discord.com/api/oauth2/authorize?client_id=743249218491121695&permissions=268437568&scope=bot) [DEV](https://discord.com/api/oauth2/authorize?client_id=743226142257053787&permissions=268437568&scope=bot)
-1. `*setApprovalChannel <name of channel>` to set the moderator's room
-1. `*setApprovalRole <name of role>` to set the role to assign on approval
+1. Join the bot to your server [LIVE](https://discord.com/api/oauth2/authorize?client_id=743249218491121695&permissions=268635200&scope=bot) [DEV](https://discord.com/api/oauth2/authorize?client_id=743260532571635804&permissions=268635200&scope=bot)
+1. `*setApproverChannel <name of channel>` to set the moderator's room
+1. `*setApproverRole <name of role>` to set the role to assign on approval
 1. `*setPublicChannel <name of channel>` to set the public room for announcements
 1. `*setPublicRole Channel <name of channel>` to set the public room for announcements
 1. Move `Approova` role to top of roles list in Discord Guild Settings
@@ -49,11 +49,11 @@ docker build -t approva .
 docker run -d approva 
 ```
 
-OR, force a volume mount to your local .env file inside the container
+OR, force a volume mount to your local .env file inside the container, and persist the sqlite.db
 
 ```
 docker build -t approva . 
-docker run -d -v /path/to/your/.env:/app/.env approva 
+docker run -d -v /path/to/your/.env:/app/.env -v /path/to/your/sqlite.db:/app/sqlite.db approva 
 ```
 
 # Contributing
