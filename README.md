@@ -27,10 +27,10 @@ Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-sch
 _Bot will listen with prefix * and will only listen to the Guild owner!__
 
 1. Join the bot to your server [LIVE](https://discord.com/api/oauth2/authorize?client_id=743249218491121695&permissions=268635200&scope=bot) [DEV](https://discord.com/api/oauth2/authorize?client_id=743260532571635804&permissions=268635200&scope=bot)
-1. `*setApproverChannel <name of channel>` to set the moderator's room
-1. `*setApproverRole <name of role>` to set the role to assign on approval
-1. `*setPublicChannel <name of channel>` to set the public room for announcements
-1. `*setPublicRole Channel <name of channel>` to set the public room for announcements
+1. `*setApproverChannel <name of channel>` to set the text channel where Approvers will receive requests.
+1. `*setApproverRole <name of role>` to set the role required to approve a request.
+1. `*setPublicChannel <name of channel>` to set the public room that Approova will talk to new members in.
+1. `*setPublicRole <name of role>` to set the public role to assign after approval.
 1. Move `Approova` role to top of roles list in Discord Guild Settings
 
 ## Starting the server
