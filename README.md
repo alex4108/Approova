@@ -63,16 +63,19 @@ python src/bot.py
 
 You should install [Docker Compose](https://docs.docker.com/compose/install/) if you haven't already.
 
-Then, modify the docker-compose.yml to include your Discord Bot Token.  In production, the application will default to using `/content` to store the sqlite database.
+Then, modify the docker-compose.yml to include your Discord Bot Token.  
 
 Finally, run: `docker-compose up -d`
 
+In production, the application will default to using `/content` to store the sqlite database.
+
 ## From Local Sources
 
-```
-docker build -t approva . 
-docker run -d -v ./content:/content -e APPROOVA_DISCORD_TOKEN=9999 approva 
-```
+Replace `image: alex4108/approova` with `build: .` in the docker-compose.yml file.
+
+Replace the `9999` Discord Bot Token with your own
+
+Run: `docker-compose up -d`
 
 ## Production Notes
 
