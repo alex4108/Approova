@@ -8,14 +8,28 @@ import logging as log
 log.basicConfig(level=log.INFO)
 import sqlite3
 
-load_dotenv()
-TOKEN = os.getenv('DISCORD_TOKEN')
+if "APPROOVA_DOTENV_PATH" in os.environ:
+   DOTENV_PATH=os.getenv('APPROOVA_DOTENV_PATH')
+else:
+   DOTENV_PATH="/content/.env"
+
+if "APPROOVA_DB_PATH" in os.environ:
+   DB_PATH=os.getenv("APPROOVA_DB_PATH")
+else:
+   DB_PATH="/content/sqlite.db"
+
+if "APPROOVA_DISCORD_TOKEN" in os.environ:
+    TOKEN = os.getenv('APPROOVA_DISCORD_TOKEN')
+else:
+    load_dotenv(DOTENV_PATH)
+    TOKEN = os.getenv("DISCORD_TOKEN")
+    
 global db
 global db_cursor
 global discord
 
 DB_NAME = "sqlite"
-db_path = os.path.join(os.path.abspath(os.getcwd()), DB_NAME + ".db")
+db_path = os.path.join(DB_PATH)
 db = sqlite3.connect(db_path)
 db_cursor = db.cursor()
 db_cursor.execute("""

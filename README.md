@@ -39,23 +39,34 @@ The .env file consists of one line, DISCORD_TOKEN=yourDiscordBotTokenHere
 
 #### Development
 
-* `virtualenv env && source env/bin/activate && pip install -r requirements.txt` for first time
-* `source env/bin/activate` for continuing
+##### First Time Setup
 
-* Then start Development
+`virtualenv env && source env/bin/activate && pip install -r requirements.txt`
 
-#### Production
+##### Returning to an existing project
+
+Be sure to activate the virtalenv, and set needed environment variables
+
+```
+source env/bin/activate
+export APPROOVA_DISCORD_TOKEN=9999
+export APPROOVA_DB_PATH=$(pwd)/sqlite.db
+export APPROOVA_DOTENV_PATH=$(pwd)/.env
+```
+
+#### Production from Online Sources
+
+You should install [Docker Compose](https://docs.docker.com/compose/install/) if you haven't already.
+
+Then, modify the docker-compose.yml to include your Discord Bot Token.
+
+Finally, run: `docker-compose up -d`
+
+#### Production from Local Sources
 
 ```
 docker build -t approva . 
-docker run -d approva 
-```
-
-OR, force a volume mount to your local .env file inside the container, and persist the sqlite.db
-
-```
-docker build -t approva . 
-docker run -d -v /path/to/your/.env:/app/.env -v /path/to/your/sqlite.db:/app/sqlite.db approva 
+docker run -d -v ./content:/content -e APPROOVA_DISCORD_TOKEN=9999 approva 
 ```
 
 # Contributing
