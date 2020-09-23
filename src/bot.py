@@ -8,22 +8,16 @@ import logging as log
 log.basicConfig(level=log.INFO)
 import sqlite3
 
-if "APPROOVA_DOTENV_PATH" in os.environ:
-   DOTENV_PATH=os.getenv('APPROOVA_DOTENV_PATH')
-else:
-   DOTENV_PATH="/content/.env"
-
-if "APPROOVA_DB_PATH" in os.environ:
-   DB_PATH=os.getenv("APPROOVA_DB_PATH")
-else:
-   DB_PATH="/content/sqlite.db"
-
-if "APPROOVA_DISCORD_TOKEN" in os.environ:
-    TOKEN = os.getenv('APPROOVA_DISCORD_TOKEN')
-else:
+DOTENV_PATH=os.getenv("APPROOVA_DOTENV_PATH", "/content/.env")
+DB_PATH=os.getenv("APPROOVA_DB_PATH", "/content/sqlite.db")
+TOKEN = os.getenv("APPROOVA_DISCORD_TOKEN")
+if TOKEN is None:
     load_dotenv(DOTENV_PATH)
     TOKEN = os.getenv("DISCORD_TOKEN")
-    
+if TOKEN is None:
+    log.critical("No bot token provided, exiting!")
+    os.exit(1)
+
 global db
 global db_cursor
 global discord
