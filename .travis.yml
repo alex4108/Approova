@@ -3,14 +3,10 @@ language: bash
 branches:
     only:
         - master
-env:
-    global:    
-        - secure: "IqV2zGYjzYhsO5olQENRbM5mhfYiA3L6WUtOOGxN+LcOAX7Fm1YeQPoWhCuCMcFQPPHdv8tlsiZdL9GMdITonhgKORyhSUBzs0idaUs/aeIV7OEfG7BU+IMaBLC/6ZPa4QV38Gcq/RSE/e7HCxiSR5plfLFZ87CxJAs6CzOVunNhWhdxsoCLigDQBIXRo2GZ2wZ7MA63jaruYMaYIxloYQt5TMC/Npag9OxqFJmGLWXA82jozB4pNn5XQUyImnuqzTSyu5/oqS4Q26x5CFqG2ZG3azTCTNgcExPUtW93UkcO0FZmyGRcBIZXgdE5PHwi8yayQH8TuTjcx5y3nKOndMvvackSQOAP11U20Bn7WMm9vtNZ3NSo3d9UA5LxsBp2VRrIuM9DX3n/Is94stESmou7RkYgeMnrxoPC/gQb9WYVBd5lN3qiKsaqg7Lk++wmM6JQd8+bjYZIXbe9LrUUK4/kAMy0R0qn62xaK0dZ4EFjzVlR+PqnvPrkaVYCl+pe7JM9M0AALd/QpDMPC9TxBmL3eZ+pPJdpEwZs7EbeMOX75absgHu08Vr6H8X3uuF/KOIrNAz8sno75lPYw+UyKyjcREDddUYr5Z7+UDm+RhfgiHkmKfRTa89sGmvQaqOeTKe049Av8UT/3YBFdxYFgLAKfycnU7rRGP8gFd9/DSk=" # DOCKER_PASSWORD
-        - DOCKER_USERNAME=alex4108
 script:
-      - echo "Logging in as ${DOCKER_USERNAME}"
-      - echo "$DOCKER_PASSWORD" | docker login --username "${DOCKER_USERNAME}" --password-stdin
+      - echo "Logging in as ${DOCKER_USER}"
+      - docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
       - docker build -t approova .
       - docker images
-      - docker tag approova $DOCKER_USERNAME/approova
-      - docker push $DOCKER_USERNAME/approova
+      - docker tag approova $DOCKER_USER/approova
+      - docker push $DOCKER_USER/approova
