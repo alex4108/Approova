@@ -1,10 +1,13 @@
 # bot.py
-import os
 
+import os
+import sys
 import discord
 from dotenv import load_dotenv
 from discord.ext import commands
 import logging as log
+
+
 log.basicConfig(level=log.INFO)
 import sqlite3
 
@@ -16,7 +19,7 @@ if TOKEN is None:
     TOKEN = os.getenv("DISCORD_TOKEN")
 if TOKEN is None:
     log.critical("No bot token provided, exiting!")
-    os.exit(1)
+    sys.exit(1)
 
 global db
 global db_cursor
@@ -68,7 +71,8 @@ bot = commands.Bot(command_prefix='*')
 def is_owner(member):
     """ Boolean return if the person is guild owner or not """
     log.info("Owner check: " + member.name + "(" + str(member.id) + ")")
-    if member.id == member.guild.owner.id:
+    log.info("Guild owner is: " + str(member.guild.owner_id))
+    if member.id == member.guild.owner_id:
         return True
     else:
         return False
