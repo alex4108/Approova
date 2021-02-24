@@ -241,6 +241,7 @@ async def setApproverChannel(ctx, channelName):
 
 
     try: 
+        channelName = channelName.lstrip('#')
         log.debug("Approval Channel: " + channelName)
         approval_channel = discord.utils.get(ctx.guild.text_channels, name=channelName) 
         if (approval_channel is None):
@@ -314,6 +315,7 @@ async def setPublicChannel(ctx, channelName):
 
     # Get the channel ID
     try: 
+        channelName = channelName.lstrip('#')
         approval_pubchannel = discord.utils.get(ctx.guild.text_channels, name=channelName)
         log.debug(approval_pubchannel)
         if (approval_pubchannel is None):
