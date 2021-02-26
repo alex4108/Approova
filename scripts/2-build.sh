@@ -24,6 +24,7 @@ fi
 if [[ "${TRAVIS_BRANCH}" == "master" && "${SKIP_PUSH}" != "1" ]]; then
     docker tag ${DOCKER_TAG} "${DOCKER_USER}/approova:latest"
     version=$(cat ${TRAVIS_BUILD_DIR}/VERSION)
+    docker pull ${DOCKER_TAG}
     docker tag ${DOCKER_TAG} "${DOCKER_USER}/approova:${version}"
     docker push "${DOCKER_USER}/approova:latest"
     docker push "${DOCKER_USER}/approova:${version}"
