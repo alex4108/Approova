@@ -13,7 +13,7 @@ STATE=$1
 version=$(cat ${TRAVIS_BUILD_DIR}/VERSION)
 
 fixFilesForMaster() { 
-    sed -i "s|build: .|alex4108/approova:${version}|g" docker-compose.yml
+    sed -i "s|build: .|image: alex4108/approova:${version}|g" docker-compose.yml
     sed -i "0,/RELEASE_VERSION/{s/RELEASE_VERSION/${version}/}" CHANGELOG.md
     git add docker-compose.yml
     git add CHANGELOG.md

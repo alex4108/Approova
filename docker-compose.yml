@@ -1,7 +1,7 @@
 version: '3'
 services:
   app:
-    alex4108/approova:1.0.5
+    image: .
     volumes:
       - ./content:/content
     environment:
