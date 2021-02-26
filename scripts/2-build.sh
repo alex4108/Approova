@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+set -x
 
 DOCKER_PLATFORMS="linux/amd64,linux/arm/v7,linux/arm64/v8"
 
@@ -24,6 +25,7 @@ fi
 if [[ "${TRAVIS_BRANCH}" == "master" && "${SKIP_PUSH}" != "1" ]]; then
     docker tag ${DOCKER_TAG} "${DOCKER_USER}/approova:latest"
     version=$(cat ${TRAVIS_BUILD_DIR}/VERSION)
+    docker pull ${DOCKER_TAG}
     docker tag ${DOCKER_TAG} "${DOCKER_USER}/approova:${version}"
     docker push "${DOCKER_USER}/approova:latest"
     docker push "${DOCKER_USER}/approova:${version}"
