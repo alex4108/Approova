@@ -4,10 +4,7 @@ set -x
 
 cd ${TRAVIS_BUILD_DIR}/scripts
 
-if [[ "${TRAVIS_COMMIT_MESSAGE}" == "(CI)"* ]]; then
-    echo "Skipping build as it was an automated commit."
-    exit 0
-fi
+bash ${TRAVIS_BUILD_DIR}/scripts/travis-check_if_abort.sh
 
 if [[ "${SKIP_TEST}" != "1" ]]; then
     bash 1-test.sh

@@ -7,11 +7,6 @@
 set -euo pipefail
 set -x
 
-if [[ "${TRAVIS_COMMIT_MESSAGE}" == "(CI)"* ]]; then
-    echo "Skipping build as it was an automated commit."
-    exit 0
-fi
-
 STATE=$1
 version=$(cat ${TRAVIS_BUILD_DIR}/VERSION)
 
