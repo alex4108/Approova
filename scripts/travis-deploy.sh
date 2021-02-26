@@ -8,10 +8,10 @@ version=$(cat ${TRAVIS_BUILD_DIR}/VERSION)
 
 # Configures git for GPG Signing
 gitConfig() { 
-    gpg --import ${TRAVIS_BUILD_DIR}/travis.gpg
+    gpg --import /tmp/travis.gpg
     mkdir -p ~/.ssh
     chmod 700 ~/.ssh
-    mv ${TRAVIS_BUILD_DIR}/id_rsa ~/.ssh/id_rsa
+    mv /tmp/id_rsa ~/.ssh/id_rsa
     chmod 400 ~/.ssh/id_rsa
     git config --local user.name "Alex Schittko"
     git config --local user.email "alex4108@live.com"
