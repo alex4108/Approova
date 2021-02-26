@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
+set -x
 
 STATE=$1
 version=$(cat ${TRAVIS_BUILD_DIR}/VERSION)
@@ -37,7 +38,7 @@ bumpVersion() {
     git add CHANGELOG.md
     git add VERSION
     git commit -S -m "Reset VERSION & CHANGELOG.md"
-    git push
+    git push tags
 }
 
 if [[ "${STATE}" == "BEFORE" ]]; then # Tag the release
@@ -45,8 +46,9 @@ if [[ "${STATE}" == "BEFORE" ]]; then # Tag the release
     freshClone
     cd /tmp/approova
     export TRAVIS_TAG="${version}"
+    git checkout master
     git tag -s ${version} -m "Release ${version}"
-    git push
+    git push origin ${version}
 
 elif [[ "${STATE}" == "AFTER" ]]; then
     ## Update the release w/ CHANGELOG.md contents
