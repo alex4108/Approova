@@ -4,6 +4,7 @@ set -euo pipefail
 
 export TRAVIS_PULL_REQUEST="false"
 export TRAVIS_BRANCH="local-$(date +%s)"
+export LOCAL_BUILD="0"
 export TRAVIS_BUILD_DIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/../"
 export DOCKER_USER="docker_username" # SET THIS
 export DOCKER_PASS="docker_password" # SET THIS
@@ -21,6 +22,7 @@ export APPROOVA_DB_PATH="${TRAVIS_BUILD_DIR}/sqlite.db"
 export SKIP_PUSH="0" # Set this if you want to skip pushing to dockerhub
 export SKIP_KUBE="0" # Set this if you want to skip deploying to kubernetes
 export ONLY_LINUX="1" # Set this if you don't want to build arm architectures
+export TRAVIS="1"
 
 cd ${TRAVIS_BUILD_DIR}/scripts
 bash travis.sh
