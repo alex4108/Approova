@@ -10,7 +10,12 @@
 ![Docker Pulls](https://img.shields.io/docker/pulls/alex4108/approova)
 [![Discord](https://img.shields.io/discord/742969076623605830)](https://discord.gg/FpDjFEQ)
 
-[![Join Us in Discord](https://user-images.githubusercontent.com/7796475/89976812-2628c080-dc2f-11ea-92a1-fe87b6a9cf92.jpg)](https://discord.gg/FpDjFEQ)
+![Supports Architecture aarch64](https://img.shields.io/badge/arch-aarch64-brightgreen)
+![Supports armhf](https://img.shields.io/badge/arch-armhf-brightgreen)
+![Supports amd64](https://img.shields.io/badge/arch-amd64-brightgreen)
+
+[![Discord Support](https://user-images.githubusercontent.com/7796475/89976812-2628c080-dc2f-11ea-92a1-fe87b6a9cf92.jpg)](https://discord.gg/FpDjFEQ)
+
 ## Purpose
 
 Let existing users of a Discord guild approve new joins
@@ -61,6 +66,8 @@ python src/bot.py
 
 ## From Online Sources
 
+The docker image is built for linux/amd64 (amd64), linux/arm/v7 (armhf), and linux/arm/v8 (aarch64).
+
 You should install [Docker Compose](https://docs.docker.com/compose/install/) if you haven't already.
 
 Then, modify the docker-compose.yml to include your Discord Bot Token.  
@@ -77,6 +84,17 @@ Replace the `9999` Discord Bot Token with your own
 
 Run: `docker-compose up -d`
 
+## Using Kubernetes
+
+In the `kube/` directory there are two files of importance, `deployment.yml.template` and `pv.yml`
+
+There are a few variables in `deployment.yml.template` which get filled in by the `travis.sh` script while the pipeline is running, namely:
+
+* `environment`: The environment tag, eg `live|test`
+* `COMMIT`: The commit / container tag to deploy
+
+You must deploy the PV's and PVC's in `pv.yml` once, before running any deployments.  Be sure to edit these configurations to match your environment's needs.
+
 ## Production Notes
 
 * [This guide](https://www.writebots.com/discord-bot-token/) seems to have a good write up on how to generate a bot token.
@@ -86,14 +104,13 @@ Run: `docker-compose up -d`
 * Once the authorization URL is copied, replace the permissions integer with that from the URL given above to join the public bot to your server.
 * You should now be able to visit your authorization URL and join your own bot to your Discord guild.
 
-
-
 # Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Fork the project
+1. Create your feature branch, branching from `develop` (`git checkout -b feature/AmazingFeature develop`)
+1. Make changes, and update `CHANGELOG.md` to describe them.
+1. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+1. Push to the branch (`git push origin feature/AmazingFeature`)
+1. [Open a pull request](https://github.com/alex4108/Approova/compare)

@@ -390,4 +390,7 @@ async def showConfig(ctx):
     await ctx.send("Public Role: " + str(config['pubrole']) + "\nPublic Channel: " + str(config['pubchannel']) + "\nApprover Role: " + str(config['role']) + "\nApprover Channel: " + str(config['channel']) )
     pass
 
+if os.getenv("TRAVIS") != None:
+    exit(0)
+
 bot.run(TOKEN)
