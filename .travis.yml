@@ -22,12 +22,21 @@ script:
 before_deploy:
 - bash scripts/travis-deploy.sh BEFORE
 deploy:
-  skip_cleanup: false
+- skip_cleanup: false
   api_key:
     secure: H4IVb6Qwuxl3nNo0QgtwnJXi4I5P9IGzP+19VuskuvSNa0vw1q/Xnm+6U9VnuXGlcw+Z413K0+h+JiCJWwoeYTqvSYW1AuUVSnUKCdkSLbWToJPsoVAg7ootMxrMNqQ9MhNPcYncv+kb/er61CC+38Qir7SIc/+AUZqc5cZa69RXaHo+70FnIg/gonVTEdDtFIf4obN26YcY5cDp9j67vpusOuZSEH65xUdmxBZoWneGkuM11klQuXjExiL66tydjIdbtZc3xJHmG5laLwo73aR/t2bOiXgCHonOLX1tgFO6SgXC68vP8CpAfRSS4Y/CgDaidKrrW15LCr4NMQ/erdxWyBIAIYmOUOeIBxkZn17Tu0wlJqCZ6Sy8AYpoCCkMJH6OTsmQdk8EWCKOntABLs18Y8dBe1/3Wh1B6jJftKDEh0JNczQSyju6gScGFV1rxaGixwPWn24Yp8rnlomcYHIBZxkPi9R17MiIPMHdQLSn26HnF6Hj6sT4Kq1/avktx86S3sgjm1HVtBVLhWOnoUxDll2cCcwwHqX1kmN8M65yJxMNi14aeh8znEns6ZJfz2V6lssiok/M6AihTQw0FbDAEPgNP6ZlrlhZzWygOC1x97e18HKcpo/FsTbPeaCxeewpXRrynL1oACQNTwjNYsKRoxCQmosJKCE4OYq/pQI=
   draft: true
   provider: github
   on:
     branch: master
+- skip_cleanup: false
+  api_key:
+    secure: H4IVb6Qwuxl3nNo0QgtwnJXi4I5P9IGzP+19VuskuvSNa0vw1q/Xnm+6U9VnuXGlcw+Z413K0+h+JiCJWwoeYTqvSYW1AuUVSnUKCdkSLbWToJPsoVAg7ootMxrMNqQ9MhNPcYncv+kb/er61CC+38Qir7SIc/+AUZqc5cZa69RXaHo+70FnIg/gonVTEdDtFIf4obN26YcY5cDp9j67vpusOuZSEH65xUdmxBZoWneGkuM11klQuXjExiL66tydjIdbtZc3xJHmG5laLwo73aR/t2bOiXgCHonOLX1tgFO6SgXC68vP8CpAfRSS4Y/CgDaidKrrW15LCr4NMQ/erdxWyBIAIYmOUOeIBxkZn17Tu0wlJqCZ6Sy8AYpoCCkMJH6OTsmQdk8EWCKOntABLs18Y8dBe1/3Wh1B6jJftKDEh0JNczQSyju6gScGFV1rxaGixwPWn24Yp8rnlomcYHIBZxkPi9R17MiIPMHdQLSn26HnF6Hj6sT4Kq1/avktx86S3sgjm1HVtBVLhWOnoUxDll2cCcwwHqX1kmN8M65yJxMNi14aeh8znEns6ZJfz2V6lssiok/M6AihTQw0FbDAEPgNP6ZlrlhZzWygOC1x97e18HKcpo/FsTbPeaCxeewpXRrynL1oACQNTwjNYsKRoxCQmosJKCE4OYq/pQI=
+  draft: true
+  provider: github
+  on:
+    branch: develop
+  
+
 after_deploy:
 - bash scripts/travis-deploy.sh AFTER
