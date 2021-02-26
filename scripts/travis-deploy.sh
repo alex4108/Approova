@@ -7,7 +7,7 @@ STATE=$1
 version=$(cat ${TRAVIS_BUILD_DIR}/VERSION)
 
 freshClone() { 
-    OLD_PWD=$(PWD)
+    OLD_PWD=$(pwd)
     ts=$(date +%s)
     mkdir -p /tmp/
     mkdir -p /tmp/${ts}
