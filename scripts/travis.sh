@@ -6,8 +6,9 @@ set -x
 DOCKER_PLATFORMS="linux/amd64,linux/arm/v7,linux/arm/v8"
 
 # Test the code
-cd ${TRAVIS_BUILD_DIR}/src
 pip3 install -r requirements.txt
+
+cd ${TRAVIS_BUILD_DIR}/src
 python3 bot.py
 
 # Build the container

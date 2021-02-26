@@ -27,7 +27,7 @@ spec:
         - name: RUN_TESTS
           value: "0"   
       volumeMounts:
-        - mountPath: "/app/content"
+        - mountPath: "/content"
           name: approova-environment-nfs
       imagePullSecrets:
       - name: approova-environment-docker
