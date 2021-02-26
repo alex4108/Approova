@@ -44,7 +44,7 @@ bumpVersion() {
 if [[ "${STATE}" == "BEFORE" ]]; then # Tag the release
     gitConfig
     freshClone
-    cd /tmp/approova
+    cd /tmp/Approova
     export TRAVIS_TAG="${version}"
     git checkout master
     git tag -s ${version} -m "Release ${version}"
@@ -58,6 +58,6 @@ elif [[ "${STATE}" == "AFTER" ]]; then
     curl -X PATCH https://api.github.com/repos/alex4108/approova/releases/${last_release_id} -u alex4108:${GITHUB_PAT} -d "{\"name\": \"v${version}\", \"body\": \"${changelog}\"}"
     # curl -X PATCH https://api.github.com/repos/alex4108/approova/releases/${last_release_id} -u alex4108:${GITHUB_PAT} -d "{\"draft\": \"false\"}"
 
-    cd /tmp/approova/
+    cd /tmp/Approova/
     bumpVersion
 fi
