@@ -12,6 +12,29 @@ freshClone() {
     git clone git@github.com:alex4108/Approova.git
 }
 
+getReleaseId() { 
+    trying="1"
+    max_tries="10"
+    sleep="2"
+    try="1"
+    while [[ "${trying}" == "1" ]]; do
+        release_id=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/alex4108/approova/releases | jq -r ".[] | select(.tag_name == \"${version}\"")
+        if [[ "${release_id}" == "null" ]]; then
+            echo "Failed!"
+            echo "Sleeping ${sleep} seconds"
+            sleep ${sleep}
+            sleep=$((${sleep} * ${sleep}))
+            try=$((${try} + 1))
+        else
+            trying=0
+        fi
+
+        if [[ "${try}" == "${max_tries}" ]]; then
+            echo "You've failed me for the last time!"
+            exit 1
+        fi
+    done
+
 # Configures git for GPG Signing
 gitConfig() { 
     gpg --import /tmp/travis.gpg
@@ -56,11 +79,11 @@ if [[ "${STATE}" == "BEFORE" ]]; then # Tag the release
 
 elif [[ "${STATE}" == "AFTER" ]]; then
     ## Update the release w/ CHANGELOG.md contents
-    last_release_id=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/alex4108/approova/releases | jq -r '.[0].id')
-    changelog=$(cat ${TRAVIS_BUILD_DIR}/CHANGELOG.md | sed "0,/RELEASE_VERSION/{s/RELEASE_VERSION/${version}/}")
-    changelog=$(echo ${changelog} | sed 's|\n|\\n|g')
-    curl -X PATCH https://api.github.com/repos/alex4108/approova/releases/${last_release_id} -u alex4108:${GITHUB_PAT} -d "{\"name\": \"v${version}\", \"body\": \"${changelog}\"}"
-    # curl -X PATCH https://api.github.com/repos/alex4108/approova/releases/${last_release_id} -u alex4108:${GITHUB_PAT} -d "{\"draft\": \"false\"}"
+    getReleaseId
+    sed -i "0,/RELEASE_VERSION/{s/RELEASE_VERSION/${version}/}" ${TRAVIS_BUILD_DIR}/CHANGELOG.md
+    sed -i ':a;N;$!ba;s/\n/\\\\n/g' ${TRAVIS_BUILD_DIR}/CHANGELOG.md
+    curl -X PATCH https://api.github.com/repos/alex4108/approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"name\": \"v${version}\", \"body\": \"${changelog}\"}"
+    # curl -X PATCH https://api.github.com/repos/alex4108/approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"draft\": \"false\"}"
 
     cd /tmp/Approova/
     bumpVersion
