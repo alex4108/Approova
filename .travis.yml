@@ -36,5 +36,6 @@ deploy:
   provider: releases
   on:
     branch: develop
+    tags: true
 after_deploy:
 - bash scripts/travis-deploy.sh AFTER

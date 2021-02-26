@@ -16,7 +16,7 @@ STATE=$1
 version=$(cat ${TRAVIS_BUILD_DIR}/VERSION)
 
 fixDockerCompose() { 
-    sed -i "s|alex4108/approova.*|alex4108/approova:${version}|g" docker-compose.yml
+    sed -i "s|build: .|alex4108/approova:${version}|g" docker-compose.yml
     git add docker-compose.yml
     git commit -S -m "(CI) Update docker-compose.yml"
     git push origin
@@ -82,10 +82,8 @@ bumpVersion() {
     next_version_minor="$(( $(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f3) + 1 ))"
     next_version="$(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f1).$(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f2).${next_version_minor}"
     echo ${next_version} > VERSION
-    sed -i "s|alex4108/approova.*|alex4108/approova:${next_version}|g" docker-compose.yml
     git add CHANGELOG.md
     git add VERSION
-    git add docker-compose.yml
     git commit -S -m "(CI) Reset for next version"
     git push
 }
@@ -120,3 +118,4 @@ elif [[ "${STATE}" == "AFTER" ]]; then
     # curl -X PATCH https://api.github.com/repos/alex4108/Approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"draft\": \"false\"}"
     bumpVersion
 fi
+
