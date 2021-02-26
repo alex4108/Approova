@@ -4,7 +4,9 @@ set -x
 
 cd ${TRAVIS_BUILD_DIR}/scripts
 
-bash 1-test.sh
+if [[ "${SKIP_TEST}" != "1" ]]; then
+    bash 1-test.sh
+fi
 
 if [[ "${TRAVIS_PULL_REQUEST}" == "false" && "${TRAVIS_BRANCH}" == "master" ]]; then
     export ENV=LIVE
@@ -15,6 +17,10 @@ else
     exit 0
 fi
 
-bash 2-build.sh
+if [[ "${SKIP_BUILD}" != "1" ]]; then
+    bash 2-build.sh
+fi
 
-bash 3-deploy-kube.sh
+if [[ "${SKIP_DEPLOY}" != "1" ]]; then
+    bash 3-deploy-kube.sh
+fi

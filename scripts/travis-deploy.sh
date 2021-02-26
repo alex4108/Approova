@@ -10,7 +10,7 @@ version=$(cat ${TRAVIS_BUILD_DIR}/VERSION)
 gitConfig() { 
     gpg --import ${TRAVIS_BUILD_DIR}/travis.gpg
     mkdir -p ~/.ssh
-    cmhod 700 ~/.ssh
+    chmod 700 ~/.ssh
     mv ${TRAVIS_BUILD_DIR}/id_rsa ~/.ssh/id_rsa
     chmod 400 ~/.ssh/id_rsa
     git config --local user.name "Alex Schittko"
@@ -49,7 +49,8 @@ reset() {
 
 if [[ "${STATE}" == "BEFORE" ]]; then # Tag the release
     gitConfig
-    git tag -s ${version}
+    export TRAVIS_TAG="${version}"
+    git tag -s ${version} -m "Release ${version}"
     mkdir -p ${TRAVIS_BUILD_DIR}/.ssh
     chmod 700 ${TRAVIS_BUILD_DIR}/.ssh
     mv ${TRAVIS_BUILD_DIR}id_rsa ${TRAVIS_BUILD_DIR}/.ssh/id_rsa

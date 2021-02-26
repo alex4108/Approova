@@ -10,7 +10,12 @@
 ![Docker Pulls](https://img.shields.io/docker/pulls/alex4108/approova)
 [![Discord](https://img.shields.io/discord/742969076623605830)](https://discord.gg/FpDjFEQ)
 
-[![Join Us in Discord](https://user-images.githubusercontent.com/7796475/89976812-2628c080-dc2f-11ea-92a1-fe87b6a9cf92.jpg)](https://discord.gg/FpDjFEQ)
+![Supports Architecture aarch64](https://img.shields.io/badge/arch-aarch64-brightgreen)
+![Supports armhf](https://img.shields.io/badge/arch-armhf-brightgreen)
+![Supports amd64](https://img.shields.io/badge/arch-amd64-brightgreen)
+
+[![Discord Support](https://user-images.githubusercontent.com/7796475/89976812-2628c080-dc2f-11ea-92a1-fe87b6a9cf92.jpg)](https://discord.gg/FpDjFEQ)
+
 ## Purpose
 
 Let existing users of a Discord guild approve new joins
@@ -61,6 +66,8 @@ python src/bot.py
 
 ## From Online Sources
 
+The docker image is built for linux/amd64 (amd64), linux/arm/v7 (armhf), and linux/arm/v8 (aarch64).
+
 You should install [Docker Compose](https://docs.docker.com/compose/install/) if you haven't already.
 
 Then, modify the docker-compose.yml to include your Discord Bot Token.  
@@ -76,6 +83,17 @@ Replace `image: alex4108/approova` with `build: .` in the docker-compose.yml fil
 Replace the `9999` Discord Bot Token with your own
 
 Run: `docker-compose up -d`
+
+## Using Kubernetes
+
+In the `kube/` directory there are two files of importance, `deployment.yml.template` and `pv.yml`
+
+There are a few variables in `deployment.yml.template` which get filled in by the `travis.sh` script while the pipeline is running. 
+
+
+
+
+You must deploy the PV's and PVC's in `pv.yml` once, before running any deployments.  Be sure to edit these configurations to match your environment's needs.
 
 ## Production Notes
 
