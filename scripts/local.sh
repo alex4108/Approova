@@ -28,6 +28,7 @@ export SKIP_DEPLOY="0" # Set this to skip Travis' deploy step
 export GITHUB_PAT="" # Github personal access token for relases
 export TRAVIS="1"
 export LOCAL_DEPLOY="0" # Set to 1 to run github releases step
+export TRAVIS_COMMIT_MESSAGE="Testing one two three"
 
 cd ${TRAVIS_BUILD_DIR}/scripts
 bash travis.sh
