@@ -18,7 +18,7 @@ getReleaseId() {
     sleep="2"
     try="1"
     while [[ "${trying}" == "1" ]]; do
-        release_id=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/alex4108/approova/releases | jq -r ".[] | select(.tag_name == \"${version}\"")
+        release_id=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/alex4108/approova/releases | jq -r ".[] | select(.tag_name == \"${version}\")")
         if [[ "${release_id}" == "null" ]]; then
             echo "Failed!"
             echo "Sleeping ${sleep} seconds"
@@ -43,8 +43,8 @@ gitConfig() {
     chmod 700 ~/.ssh
     mv /tmp/id_rsa ~/.ssh/id_rsa
     chmod 400 ~/.ssh/id_rsa
-    git config --local user.name "Alex Schittko"
-    git config --local user.email "alex4108@live.com"
+    git config user.name "Alex Schittko"
+    git config user.email "alex4108@live.com"
     git config --global user.signingkey DFF8E003A6969029
     echo -e "Host github.com\n    StrictHostKeyChecking no" > ~/.ssh/config
 }
