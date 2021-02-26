@@ -2,11 +2,11 @@
 
 ## Breaking Changes
 
-* None!
+*
 
 ## Bugs
 
-* No bugs outstanding!
+*
 
 ## Improvements
 
