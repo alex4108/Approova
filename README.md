@@ -93,7 +93,12 @@ There are a few variables in `deployment.yml.template` which get filled in by th
 * `environment`: The environment tag, eg `live|test`
 * `COMMIT`: The commit / container tag to deploy
 
-You must deploy the PV's and PVC's in `pv.yml` once, before running any deployments.  Be sure to edit these configurations to match your environment's needs.
+You must deploy the PV's and PVC's in `pv.yml` once, before running any deployments.  
+
+You must deploy a secret that the pod will use for the Discord Bot Token: 
+`kubectl create secret generic approova-environment-discord --from-literal=username="discord" --from-literal=password="${APPROOVA_DISCORD_TOKEN}"`
+
+Be sure to edit these configurations to match your environment's needs.
 
 ## Production Notes
 
