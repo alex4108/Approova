@@ -24,20 +24,16 @@ before_deploy:
 - bash scripts/travis-deploy.sh BEFORE
 deploy:
 - skip_cleanup: false
-  user: alex4108
-  password: ${GITHUB_PAT}
+  api_key: $GITHUB_PAT
   draft: true
   provider: releases
   on:
     branch: master
 - skip_cleanup: false
-  user: alex4108
-  password: ${GITHUB_PAT}
+  api_key: $GITHUB_PAT
   draft: true
   provider: releases
   on:
     branch: develop
-  
-
 after_deploy:
 - bash scripts/travis-deploy.sh AFTER
