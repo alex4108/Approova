@@ -17,11 +17,9 @@ version=$(cat ${TRAVIS_BUILD_DIR}/VERSION)
 
 fixDockerCompose() { 
     sed -i "s|alex4108/approova.*|alex4108/approova:${version}|g" docker-compose.yml
-    if [[ "$1" == "commit" ]]; then
-        git add docker-compose.yml
-        git commit -S -m "(CI) Update docker-compose.yml"
-        git push origin
-    fi
+    git add docker-compose.yml
+    git commit -S -m "(CI) Update docker-compose.yml"
+    git push origin
 }
 
 scrubSecrets() { 
@@ -84,7 +82,7 @@ bumpVersion() {
     next_version_minor="$(( $(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f3) + 1 ))"
     next_version="$(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f1).$(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f2).${next_version_minor}"
     echo ${next_version} > VERSION
-    fixDockerCompose
+    sed -i "s|alex4108/approova.*|alex4108/approova:${next_version}|g" docker-compose.yml
     git add CHANGELOG.md
     git add VERSION
     git add docker-compose.yml
@@ -92,15 +90,16 @@ bumpVersion() {
     git push
 }
 
+# Tag the release
+# Fix docker compose
 if [[ "${STATE}" == "BEFORE" ]]; then 
-    # Tag the release
     gitConfig
     freshClone
 
     git checkout master
     export TRAVIS_TAG="${version}"
     # UNCOMMENT BEFORE GOING TO MASTER
-    # fixDockerCompose commit
+    # fixDockerCompose
     git tag -s ${version} -m "Release ${version}"
     git push origin ${version}
 
@@ -109,13 +108,13 @@ if [[ "${STATE}" == "BEFORE" ]]; then
     scrubSecrets
     
 
+# Update the release in Github
+# bump develop's version
 elif [[ "${STATE}" == "AFTER" ]]; then 
     gitConfig
-    # Update the release in Github
-    # bump develop's version
     getReleaseId
     sed -i "0,/RELEASE_VERSION/{s/RELEASE_VERSION/${version}/}" ${TRAVIS_BUILD_DIR}/CHANGELOG.md
-    sed -i ':a;N;$!ba;s|\n|<br />|g' ${TRAVIS_BUILD_DIR}/CHANGELOG.md
+    sed -i ':a;N;$!ba;s|\n|\\\\r\\\\n|g' ${TRAVIS_BUILD_DIR}/CHANGELOG.md
     curl -X PATCH https://api.github.com/repos/alex4108/Approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"tag_name\": \"${version}\", \"name\": \"v${version}\", \"body\": \"$(cat ${TRAVIS_BUILD_DIR}/CHANGELOG.md)\"}"
     # UNCOMMENT BEFORE GOING TO MASTER
     # curl -X PATCH https://api.github.com/repos/alex4108/Approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"draft\": \"false\"}"
