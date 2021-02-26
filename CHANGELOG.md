@@ -2,11 +2,11 @@
 
 ## Breaking Changes
 
-* None!
+*
 
 ## Bugs
 
-* No bugs outstanding!
+*
 
 ## Improvements
 
@@ -14,3 +14,5 @@
 * Kubernetes templates
 * Automated deployment for public bot
 * Automated releases to github
+* Kubernetes template restarts pods if unavailable for 10 seconds
+

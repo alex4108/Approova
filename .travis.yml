@@ -19,6 +19,7 @@ script:
 - mkdir -vp ~/.docker/cli-plugins/
 - curl --silent -L "https://github.com/docker/buildx/releases/download/v0.5.1/buildx-v0.5.1.linux-amd64" > ~/.docker/cli-plugins/docker-buildx
 - chmod a+x ~/.docker/cli-plugins/docker-buildx
+script:
 - bash scripts/travis.sh
 before_deploy:
 - bash scripts/travis-deploy.sh BEFORE
@@ -29,12 +30,3 @@ deploy:
   provider: releases
   on:
     branch: master
-- skip_cleanup: false
-  api_key: $GITHUB_PAT
-  draft: true
-  provider: releases
-  on:
-    branch: develop
-    tags: true
-after_deploy:
-- bash scripts/travis-deploy.sh AFTER
