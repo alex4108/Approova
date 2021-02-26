@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 mkdir -p /tmp/
-openssl aes-256-cbc -K $encrypted_f217180e22ee_key -iv $encrypted_f217180e22ee_iv -in id_rsa.enc -out /tmp/id_rsa -d
-openssl aes-256-cbc -K $encrypted_13a541962f09_key -iv $encrypted_13a541962f09_iv -in travis.gpg.enc -out /tmp/travis.gpg -d
+openssl aes-256-cbc -K $encrypted_f217180e22ee_key -iv $encrypted_f217180e22ee_iv -in ${TRAVIS_BUILD_DIR}/id_rsa.enc -out /tmp/id_rsa -d
+openssl aes-256-cbc -K $encrypted_13a541962f09_key -iv $encrypted_13a541962f09_iv -in ${TRAVIS_BUILD_DIR}/travis.gpg.enc -out /tmp/travis.gpg -d
 sudo apt purge --auto-remove qemu-user qemu-user-binfmt binfmt-support
 sudo apt install qemu-user
 sudo rm -rf /var/lib/apt/lists/*
