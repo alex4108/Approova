@@ -1,16 +1,11 @@
-# Pending Release
+# Release RELEASE_VERSION
 
 ## Bugs
 
-*
+* Fixed `is_owner()` to perform the check properly.
 
 ## Improvements
 
-*
-
-# 1.1 - UNRELEASED
-
-## Improvements
-
-* Added support for `linux/arm64/v8`
-* Added kubernetes template for deployment
+* Docker support for `linux/arm64/v8`
+* Kubernetes templates
+* Automated deployment for public bot

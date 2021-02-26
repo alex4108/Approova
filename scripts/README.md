@@ -1,8 +1,10 @@
 # Build Scripts
 
-1. `1-test.sh`: Installs the requirements via `pip` locally, and proceeds to test the bot.  Currently, this only checks the main `bot.py` starts.  
-1. `2-build.sh`: Builds the docker container(s) for the project and pushes them to DockerHub.
-1. `3-deploy-kube.sh`: Deploys the update to a kubernetes cluster. 
+* `travis.sh`: Ran by travis-ci.  It runs script 1 for all pushes & PR's, and scripts 2 and 3 for pushes to `develop` or `master`.
+* `1-test.sh`: Installs the requirements via `pip` locally, and proceeds to test the bot.  Currently, this only checks the main `bot.py` starts.  
+* `2-build.sh`: Builds the docker container(s) for the project and pushes them to DockerHub.
+* `3-deploy-kube.sh`: Deploys the update to a kubernetes cluster. 
+* `travis-deploy.sh` Runs after a push to `master` to set versioning
 
 ## Testing
 
