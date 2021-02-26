@@ -53,12 +53,12 @@ if [[ "${STATE}" == "BEFORE" ]]; then # Tag the release
     cd ${TRAVIS_BUILD_DIR}
     git tag ${version} -m "Release ${version}"
     cd ${OLDPWD}
-    
+
 elif [[ "${STATE}" == "AFTER" ]]; then
     ## Update the release w/ CHANGELOG.md contents
     last_release_id=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/alex4108/approova/releases | jq -r '.[0].id')
     changelog=$(cat ${TRAVIS_BUILD_DIR}/CHANGELOG.md | sed "0,/RELEASE_VERSION/{s/RELEASE_VERSION/${version}/}")
-
+    changelog=$(echo ${changelog} | sed 's|\n|\\n|g')
     curl -X PATCH https://api.github.com/repos/alex4108/approova/releases/${last_release_id} -u alex4108:${GITHUB_PAT} -d "{\"name\": \"v${version}\", \"body\": \"${changelog}\"}"
     # curl -X PATCH https://api.github.com/repos/alex4108/approova/releases/${last_release_id} -u alex4108:${GITHUB_PAT} -d "{\"draft\": \"false\"}"
 
