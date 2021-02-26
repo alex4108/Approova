@@ -45,11 +45,9 @@ if [[ "${STATE}" == "BEFORE" ]]; then # Tag the release
     gitConfig
     freshClone
     cd /tmp/Approova
-    export TRAVIS_TAG="${version}"
     git checkout master
-    git tag -s ${version} -m "Release ${version}"
-    git push origin ${version}
-
+    export TRAVIS_TAG="${version}"
+    
 elif [[ "${STATE}" == "AFTER" ]]; then
     ## Update the release w/ CHANGELOG.md contents
     last_release_id=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/alex4108/approova/releases | jq -r '.[0].id')
