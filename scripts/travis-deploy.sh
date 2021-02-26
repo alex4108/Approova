@@ -7,6 +7,8 @@
 set -euo pipefail
 set -x
 
+bash ${TRAVIS_BUILD_DIR}/scripts/travis-check_if_abort.sh
+
 STATE=$1
 version=$(cat ${TRAVIS_BUILD_DIR}/VERSION)
 
@@ -92,7 +94,6 @@ if [[ "${STATE}" == "BEFORE" ]]; then
     freshClone
 
     git checkout master
-    export TRAVIS_TAG="${version}"
     fixFilesForMaster
     git tag -s ${version} -m "Release ${version}"
     git push origin ${version}
