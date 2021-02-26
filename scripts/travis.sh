@@ -6,6 +6,10 @@ cd ${TRAVIS_BUILD_DIR}/scripts
 
 bash ${TRAVIS_BUILD_DIR}/scripts/travis-check_if_abort.sh
 
+if [[ "${LOCAL_BUILD}" != "1" ]]; then
+    bash travis-bootstrap.sh
+fi
+
 if [[ "${SKIP_TEST}" != "1" ]]; then
     bash 1-test.sh
 fi
