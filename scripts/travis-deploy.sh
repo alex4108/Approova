@@ -52,5 +52,5 @@ elif [[ "${STATE}" == "AFTER" ]]; then
     curl -X PATCH https://api.github.com/repos/alex4108/approova/releases/${last_release_id} -u alex4108:${GITHUB_PAT} -d "{\"name\": \"v${version}\", \"body\": \"${changelog}\"}"
     #curl -X PATCH https://api.github.com/repos/alex4108/approova/releases/${last_release_id} -u alex4108:${GITHUB_PAT} -d "{\"draft\": \"false\"}"
 
-    reset()
+    reset
 fi
