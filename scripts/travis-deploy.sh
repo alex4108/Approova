@@ -51,14 +51,10 @@ gitConfig() {
 
 # Bumps the version
 bumpVersion() { 
+    git checkout develop
     echo -e "# Release RELEASE_VERSION\n\n## Breaking Changes\n\n*\n\n## Bugs\n\n*\n\n## Improvements\n\n*\n""" > CHANGELOG.md
     next_version_minor="$(( $(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f3) + 1 ))"
     next_version="$(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f1).$(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f2).${next_version_minor}" > VERSION
-    git checkout develop
-    rm -rf VERSION
-    rm -rf CHANGELOG.md
-    cp ${TRAVIS_BUILD_DIR}/CHANGELOG.md ./CHANGELOG.md
-    cp ${TRAVIS_BUILD_DIR}/VERSION ./VERSION
     git add CHANGELOG.md
     git add VERSION
     git commit -S -m "Reset VERSION & CHANGELOG.md"
@@ -83,7 +79,7 @@ elif [[ "${STATE}" == "AFTER" ]]; then
     getReleaseId
     sed -i "0,/RELEASE_VERSION/{s/RELEASE_VERSION/${version}/}" ${TRAVIS_BUILD_DIR}/CHANGELOG.md
     sed -i ':a;N;$!ba;s/\n/\\\\n/g' ${TRAVIS_BUILD_DIR}/CHANGELOG.md
-    curl -X PATCH https://api.github.com/repos/alex4108/approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"name\": \"v${version}\", \"body\": \"${changelog}\"}"
+    curl -X PATCH https://api.github.com/repos/alex4108/approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"name\": \"v${version}\", \"body\": \"$(cat ${TRAVIS_BUILD_DIR}/CHANGELOG.md)\"}"
     # curl -X PATCH https://api.github.com/repos/alex4108/approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"draft\": \"false\"}"
 
     cd /tmp/Approova/
