@@ -34,6 +34,7 @@ getReleaseId() {
             exit 1
         fi
     done
+}
 
 # Configures git for GPG Signing
 gitConfig() { 
