@@ -27,6 +27,16 @@ export SKIP_BUILD="0" # Set this to skip Travis' build step
 export SKIP_DEPLOY="0" # Set this to skip Travis' deploy step
 export GITHUB_PAT="" # Github personal access token for relases
 export TRAVIS="1"
+export LOCAL_DEPLOY="0" # Set to 1 to run github releases step
 
 cd ${TRAVIS_BUILD_DIR}/scripts
 bash travis.sh
+
+
+if [[ "${LOCAL_DEPLOY}" == "1" ]]; then
+    bash travis-deploy.sh BEFORE
+    # Travis would upload the deployment now
+    # Then...
+    bash travis-deploy.sh AFTER
+fi
+
