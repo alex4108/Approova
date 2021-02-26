@@ -26,7 +26,7 @@ getReleaseId() {
     sleep="2"
     try="1"
     while [[ "${trying}" == "1" ]]; do
-        release_id=$(curl -H "Accept: application/vnd.github.v3+json" -u alex4108:${GITHUB_PAT} https://api.github.com/repos/alex4108/Approova/releases | jq -r ".[] | select(.tag_name == \"${version}\")")
+        release_id=$(curl -H "Accept: application/vnd.github.v3+json" -u alex4108:${GITHUB_PAT} https://api.github.com/repos/alex4108/Approova/releases | jq -r ".[] | select(.tag_name == \"${version}\").id")
         if [[ "${release_id}" == "null" || "${release_id}" == "" ]]; then
             echo "Failed!"
             echo "Sleeping ${sleep} seconds"

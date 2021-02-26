@@ -109,7 +109,7 @@ You must deploy the PV's and PVC's in `pv.yml` once, before running any deployme
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
 1. Fork the Project
-1. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+1. Create your Feature Branch (`git checkout -b feature/AmazingFeature develop`)
 1. Make changes, and update `CHANGELOG.md` to describe them.
 1. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 1. Push to the Branch (`git push origin feature/AmazingFeature`)
