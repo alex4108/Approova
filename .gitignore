@@ -1,4 +1,6 @@
 env
 sqlite.db
+*.env
 .env
-
+.vscode/
+*/private/*

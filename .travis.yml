@@ -1,12 +1,42 @@
-dist: trusty
-language: bash
-branches:
-    only:
-        - master
+dist: bionic
+language: python
+python:
+- 3.8
+cache: pip
+before_install:
+- openssl aes-256-cbc -K $encrypted_f217180e22ee_key -iv $encrypted_f217180e22ee_iv -in id_rsa.enc -out id_rsa -d
+- openssl aes-256-cbc -K $encrypted_13a541962f09_key -iv $encrypted_13a541962f09_iv -in travis.gpg.enc -out travis.gpg -d
+- sudo apt purge --auto-remove qemu-user qemu-user-binfmt binfmt-support
+- sudo apt install qemu-user
+- sudo rm -rf /var/lib/apt/lists/*
+- curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+- sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu
+  $(lsb_release -cs) edge"
+- sudo apt-get update
+- sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
+- mkdir -vp ~/.docker/cli-plugins/
+- curl --silent -L "https://github.com/docker/buildx/releases/download/v0.5.1/buildx-v0.5.1.linux-amd64" > ~/.docker/cli-plugins/docker-buildx
+- chmod a+x ~/.docker/cli-plugins/docker-buildx
 script:
-      - echo "Logging in as ${DOCKER_USER}"
-      - docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
-      - docker build -t approova .
-      - docker images
-      - docker tag approova $DOCKER_USER/approova
-      - docker push $DOCKER_USER/approova
+- bash scripts/travis.sh
+before_deploy:
+- bash scripts/travis-deploy.sh BEFORE
+deploy:
+- skip_cleanup: false
+  api_key:
+    secure: H4IVb6Qwuxl3nNo0QgtwnJXi4I5P9IGzP+19VuskuvSNa0vw1q/Xnm+6U9VnuXGlcw+Z413K0+h+JiCJWwoeYTqvSYW1AuUVSnUKCdkSLbWToJPsoVAg7ootMxrMNqQ9MhNPcYncv+kb/er61CC+38Qir7SIc/+AUZqc5cZa69RXaHo+70FnIg/gonVTEdDtFIf4obN26YcY5cDp9j67vpusOuZSEH65xUdmxBZoWneGkuM11klQuXjExiL66tydjIdbtZc3xJHmG5laLwo73aR/t2bOiXgCHonOLX1tgFO6SgXC68vP8CpAfRSS4Y/CgDaidKrrW15LCr4NMQ/erdxWyBIAIYmOUOeIBxkZn17Tu0wlJqCZ6Sy8AYpoCCkMJH6OTsmQdk8EWCKOntABLs18Y8dBe1/3Wh1B6jJftKDEh0JNczQSyju6gScGFV1rxaGixwPWn24Yp8rnlomcYHIBZxkPi9R17MiIPMHdQLSn26HnF6Hj6sT4Kq1/avktx86S3sgjm1HVtBVLhWOnoUxDll2cCcwwHqX1kmN8M65yJxMNi14aeh8znEns6ZJfz2V6lssiok/M6AihTQw0FbDAEPgNP6ZlrlhZzWygOC1x97e18HKcpo/FsTbPeaCxeewpXRrynL1oACQNTwjNYsKRoxCQmosJKCE4OYq/pQI=
+  draft: true
+  provider: github
+  on:
+    branch: master
+- skip_cleanup: false
+  api_key:
+    secure: H4IVb6Qwuxl3nNo0QgtwnJXi4I5P9IGzP+19VuskuvSNa0vw1q/Xnm+6U9VnuXGlcw+Z413K0+h+JiCJWwoeYTqvSYW1AuUVSnUKCdkSLbWToJPsoVAg7ootMxrMNqQ9MhNPcYncv+kb/er61CC+38Qir7SIc/+AUZqc5cZa69RXaHo+70FnIg/gonVTEdDtFIf4obN26YcY5cDp9j67vpusOuZSEH65xUdmxBZoWneGkuM11klQuXjExiL66tydjIdbtZc3xJHmG5laLwo73aR/t2bOiXgCHonOLX1tgFO6SgXC68vP8CpAfRSS4Y/CgDaidKrrW15LCr4NMQ/erdxWyBIAIYmOUOeIBxkZn17Tu0wlJqCZ6Sy8AYpoCCkMJH6OTsmQdk8EWCKOntABLs18Y8dBe1/3Wh1B6jJftKDEh0JNczQSyju6gScGFV1rxaGixwPWn24Yp8rnlomcYHIBZxkPi9R17MiIPMHdQLSn26HnF6Hj6sT4Kq1/avktx86S3sgjm1HVtBVLhWOnoUxDll2cCcwwHqX1kmN8M65yJxMNi14aeh8znEns6ZJfz2V6lssiok/M6AihTQw0FbDAEPgNP6ZlrlhZzWygOC1x97e18HKcpo/FsTbPeaCxeewpXRrynL1oACQNTwjNYsKRoxCQmosJKCE4OYq/pQI=
+  draft: true
+  provider: github
+  on:
+    branch: develop
+  
+
+after_deploy:
+- bash scripts/travis-deploy.sh AFTER

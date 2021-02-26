@@ -86,14 +86,13 @@ Run: `docker-compose up -d`
 * Once the authorization URL is copied, replace the permissions integer with that from the URL given above to join the public bot to your server.
 * You should now be able to visit your authorization URL and join your own bot to your Discord guild.
 
-
-
 # Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
 1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+1. Make changes, and update `CHANGELOG.md` to describe them.
+1. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+1. Push to the Branch (`git push origin feature/AmazingFeature`)
+1. Open a Pull Request, targeting the `develop` branch.
