@@ -47,6 +47,12 @@ if [[ "${STATE}" == "BEFORE" ]]; then # Tag the release
     cd /tmp/Approova
     git checkout master
     export TRAVIS_TAG="${version}"
+    git tag -s ${version} -m "Release ${version}"
+    git push origin ${version}
+    OLDPWD=$(pwd)
+    cd ${TRAVIS_BUILD_DIR}
+    git tag ${version} -m "Release ${version}"
+    cd ${OLDPWD}
     
 elif [[ "${STATE}" == "AFTER" ]]; then
     ## Update the release w/ CHANGELOG.md contents
