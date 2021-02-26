@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Deploys to GitHub Releases
+# Rotates version number
+# Modifies github release to include CHANGELOG
+
 set -euo pipefail
 set -x
 
@@ -13,7 +17,7 @@ freshClone() {
     mkdir -p /tmp/${ts}
     cd /tmp/${ts}
     git clone git@github.com:alex4108/Approova.git
-    cd /tmp/${ts}/approova
+    cd /tmp/${ts}/Approova
 }
 
 getReleaseId() { 
@@ -22,7 +26,7 @@ getReleaseId() {
     sleep="2"
     try="1"
     while [[ "${trying}" == "1" ]]; do
-        release_id=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/alex4108/approova/releases | jq -r ".[] | select(.tag_name == \"${version}\")")
+        release_id=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/alex4108/Approova/releases | jq -r ".[] | select(.tag_name == \"${version}\")")
         if [[ "${release_id}" == "null" || "${release_id}" == "" ]]; then
             echo "Failed!"
             echo "Sleeping ${sleep} seconds"
@@ -66,9 +70,11 @@ bumpVersion() {
     git push
 }
 
-if [[ "${STATE}" == "BEFORE" ]]; then # Tag the release
+if [[ "${STATE}" == "BEFORE" ]]; then 
+    # Tag the release
     gitConfig
     freshClone
+
     git checkout master
     export TRAVIS_TAG="${version}"
     git tag -s ${version} -m "Release ${version}"
@@ -77,13 +83,14 @@ if [[ "${STATE}" == "BEFORE" ]]; then # Tag the release
     git tag ${version} -m "Release ${version}"
     cd ${OLDPWD}
 
-elif [[ "${STATE}" == "AFTER" ]]; then
-    ## Update the release w/ CHANGELOG.md contents
+elif [[ "${STATE}" == "AFTER" ]]; then 
+    # Update the release in Github
+    # bump develop's version
     getReleaseId
     sed -i "0,/RELEASE_VERSION/{s/RELEASE_VERSION/${version}/}" ${TRAVIS_BUILD_DIR}/CHANGELOG.md
     sed -i ':a;N;$!ba;s/\n/\\\\n/g' ${TRAVIS_BUILD_DIR}/CHANGELOG.md
-    curl -X PATCH https://api.github.com/repos/alex4108/approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"name\": \"v${version}\", \"body\": \"$(cat ${TRAVIS_BUILD_DIR}/CHANGELOG.md)\"}"
-    # curl -X PATCH https://api.github.com/repos/alex4108/approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"draft\": \"false\"}"
+    curl -X PATCH https://api.github.com/repos/alex4108/Approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"name\": \"v${version}\", \"body\": \"$(cat ${TRAVIS_BUILD_DIR}/CHANGELOG.md)\"}"
+    # curl -X PATCH https://api.github.com/repos/alex4108/Approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"draft\": \"false\"}"
 
     bumpVersion
 fi
