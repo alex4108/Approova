@@ -8,7 +8,7 @@ bash 1-test.sh
 
 if [[ "${TRAVIS_PULL_REQUEST}" == "false" && "${TRAVIS_BRANCH}" == "master" ]]; then
     export ENV=LIVE
-elif [[ "${TRAVIS_PULL_REQUEST}" == "false" && "${TRAVIS_BRANCH}" == "develop" ]]; then
+elif [[ "${TRAVIS_PULL_REQUEST}" == "false" ]]; then
     export ENV=TEST
 else 
     echo "Exiting early because I don't deploy pull requests to DockerHub"
