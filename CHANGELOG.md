@@ -1,4 +1,4 @@
-# Release RELEASE_VERSION
+# Release 1.0.4
 
 ## Breaking Changes
 
