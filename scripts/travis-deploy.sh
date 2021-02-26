@@ -15,7 +15,7 @@ gitConfig() {
     chmod 400 ~/.ssh/id_rsa
     git config --local user.name "Alex Schittko"
     git config --local user.email "alex4108@live.com"
-    git config --global user.signingkey 3AA5C34371567BD2
+    git config --global user.signingkey DFF8E003A6969029
     echo -e "Host github.com\n    StrictHostKeyChecking no" > ~/.ssh/config
 }
 
