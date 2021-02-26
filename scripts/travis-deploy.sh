@@ -114,7 +114,7 @@ elif [[ "${STATE}" == "AFTER" ]]; then
     gitConfig
     getReleaseId
     sed -i "0,/RELEASE_VERSION/{s/RELEASE_VERSION/${version}/}" ${TRAVIS_BUILD_DIR}/CHANGELOG.md
-    sed -i ':a;N;$!ba;s|\n|\\\\r\\\\n|g' ${TRAVIS_BUILD_DIR}/CHANGELOG.md
+    sed -i ':a;N;$!ba;s|\n|\\r\\n|g' ${TRAVIS_BUILD_DIR}/CHANGELOG.md
     curl -X PATCH https://api.github.com/repos/alex4108/Approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"tag_name\": \"${version}\", \"name\": \"v${version}\", \"body\": \"$(cat ${TRAVIS_BUILD_DIR}/CHANGELOG.md)\"}"
     # UNCOMMENT BEFORE GOING TO MASTER
     # curl -X PATCH https://api.github.com/repos/alex4108/Approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"draft\": \"false\"}"
