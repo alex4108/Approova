@@ -9,7 +9,7 @@ version=$(cat ${TRAVIS_BUILD_DIR}/VERSION)
 freshClone() { 
     mkdir -p /tmp
     cd /tmp
-    git clone git@github.com:alex4108/approova.git
+    git clone git@github.com:alex4108/Approova.git
 }
 
 # Configures git for GPG Signing
