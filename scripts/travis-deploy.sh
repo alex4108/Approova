@@ -15,6 +15,7 @@ fixDockerCompose() {
     if [[ "$1" == "commit" ]]; then
         git add docker-compose.yml
         git commit -S -m "(CI) Update docker-compose.yml"
+        git push origin
     fi
 }
 
@@ -62,7 +63,7 @@ gitConfig() {
     gpg --import /tmp/travis.gpg
     mkdir -p ~/.ssh
     chmod 700 ~/.ssh
-    mv /tmp/id_rsa ~/.ssh/id_rsa
+    /bin/cp -rf /tmp/id_rsa ~/.ssh/id_rsa
     chmod 400 ~/.ssh/id_rsa
     git config --global user.name "Alex Schittko"
     git config --global user.email "alex4108@live.com"
@@ -84,10 +85,6 @@ bumpVersion() {
     git add docker-compose.yml
     git commit -S -m "(CI) Reset for next version"
     git push
-    
-    
-    # UNCOMMENT BEFORE GOING TO MASTER
-    # git push 
 }
 
 if [[ "${STATE}" == "BEFORE" ]]; then 
@@ -104,8 +101,6 @@ if [[ "${STATE}" == "BEFORE" ]]; then
     cd ${TRAVIS_BUILD_DIR}
     git tag ${version} -m "Release ${version}"
     scrubSecrets
-    cd ${OLDPWD}
-
     
 
 elif [[ "${STATE}" == "AFTER" ]]; then 
