@@ -79,7 +79,7 @@ bumpVersion() {
     next_version_minor="$(( $(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f3) + 1 ))"
     next_version="$(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f1).$(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f2).${next_version_minor}"
     echo ${next_version} > VERSION
-    sed -i "s|alex4108/approova.*|alex4108/approova:${next_version}|g" docker-compose.yml
+    fixDockerCompose
     git add CHANGELOG.md
     git add VERSION
     git add docker-compose.yml
@@ -94,7 +94,8 @@ if [[ "${STATE}" == "BEFORE" ]]; then
 
     git checkout master
     export TRAVIS_TAG="${version}"
-    fixDockerCompose commit
+    # UNCOMMENT BEFORE GOING TO MASTER
+    # fixDockerCompose commit
     git tag -s ${version} -m "Release ${version}"
     git push origin ${version}
 
@@ -110,7 +111,7 @@ elif [[ "${STATE}" == "AFTER" ]]; then
     getReleaseId
     sed -i "0,/RELEASE_VERSION/{s/RELEASE_VERSION/${version}/}" ${TRAVIS_BUILD_DIR}/CHANGELOG.md
     sed -i ':a;N;$!ba;s|\n|<br />|g' ${TRAVIS_BUILD_DIR}/CHANGELOG.md
-    curl -X PATCH https://api.github.com/repos/alex4108/Approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"tag_name\", \"${version}\"\"name\": \"v${version}\", \"body\": \"$(cat ${TRAVIS_BUILD_DIR}/CHANGELOG.md)\"}"
+    curl -X PATCH https://api.github.com/repos/alex4108/Approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"tag_name\": \"${version}\", \"name\": \"v${version}\", \"body\": \"$(cat ${TRAVIS_BUILD_DIR}/CHANGELOG.md)\"}"
     # UNCOMMENT BEFORE GOING TO MASTER
     # curl -X PATCH https://api.github.com/repos/alex4108/Approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"draft\": \"false\"}"
 
