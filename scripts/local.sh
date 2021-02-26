@@ -22,6 +22,9 @@ export APPROOVA_DB_PATH="${TRAVIS_BUILD_DIR}/sqlite.db"
 export SKIP_PUSH="0" # Set this if you want to skip pushing to dockerhub
 export SKIP_KUBE="0" # Set this if you want to skip deploying to kubernetes
 export ONLY_LINUX="1" # Set this if you don't want to build arm architectures
+export SKIP_TEST="0" # Set this to skip Travis' test step
+export SKIP_BUILD="0" # Set this to skip Travis' build step
+export SKIP_DEPLOY="0" # Set this to skip Travis' deploy step
 export TRAVIS="1"
 
 cd ${TRAVIS_BUILD_DIR}/scripts
