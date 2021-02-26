@@ -118,6 +118,5 @@ elif [[ "${STATE}" == "AFTER" ]]; then
     curl -X PATCH https://api.github.com/repos/alex4108/Approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"tag_name\": \"${version}\", \"name\": \"v${version}\", \"body\": \"$(cat ${TRAVIS_BUILD_DIR}/CHANGELOG.md)\"}"
     # UNCOMMENT BEFORE GOING TO MASTER
     # curl -X PATCH https://api.github.com/repos/alex4108/Approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"draft\": \"false\"}"
-
     bumpVersion
 fi
