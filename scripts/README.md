@@ -1,27 +1,47 @@
-You must be running on a linux based host to run the pipeline scripts.  
-The host must be equipped with docker, qemu, and docker-buildx.  See .travis.yml for an example of what's needed in the host
+# Build Scripts
 
+1. `1-test.sh`: Installs the requirements via `pip` locally, and proceeds to test the bot.  Currently, this only checks the main `bot.py` starts.  
+1. `2-build.sh`: Builds the docker container(s) for the project and pushes them to DockerHub.
+1. `3-deploy-kube.sh`: Deploys the update to a kubernetes cluster. 
 
-If you want to test the travis.sh (build script) locally, set these variables
+## Testing
 
-```
-export TRAVIS_PULL_REQUEST="false"
-export TRAVIS_BRANCH="kube"
-export TRAVIS_BUILD_DIR="/root/of/project"
-export DOCKER_USER="docker_username"
-export DOCKER_PASS="docker_password"
-export TRAVIS_COMMIT="testy"
-```
+The test only installs requirements via `pip` and runs the bot with `python3 bot.py`.
 
-If you want to test the kubernetes deployment pipeline, set these variables.
-You must deploy a private volume matching the volumeMount's name as defined in `kube/deployment.yml`
+The bot will exit because the `TRAVIS` environment variable will be set.
 
-```
-export KUBE_CA_CERT=""
-export KUBE_ADMIN_CERT=""
-export KUBE_ADMIN_KEY=""
-export KUBE_ENDPOINT=""
-export nfs_path=""
-export nfs_host=""
-export BOT_TOKEN="discord-bot-token"
-```
+This effectively performs a lint against `bot.py`, but doesn't provide for unit testing.
+
+## Build the Container
+
+In Travis-CI, the bot will be built using `docker buildx`.  You can see how to set up `buildx` yourself in `.travis.yml`.
+
+Upon successful build, the container will be pushed to DockerHub.
+
+## Kubernetes
+
+I included my kubernetes templates for your use, if you wish to use them.
+
+## Running Build Scripts locally
+
+Use `scripts/local.sh`
+
+Be sure to modify the environment variables as noted in the script.
+
+### Test & Build
+
+**You must be running on a linux based host to run the pipeline scripts.**
+__The host must be equipped with docker, qemu, and docker-buildx.  See .travis.yml for an example of what's needed in the host__
+
+You can set this environment variable to only build the `linux/amd64` arch: `export ONLY_LINUX="1'`
+You can set this environment variable to skip docker's push step: `export SKIP_PUSH="1'`
+You can set this environment variable to skip the kubernetes deployment: `export SKIP_KUBE="1"`
+
+### Deploy to Kubernetes
+
+You must deploy two persistent volumes, named `approova-test-pv` and `approova-live-pv`.  See `kube/pv.yml` for an example (using NFS)
+
+The PVC only stores the sqlite database used by the bot.
+
+If you want to test the kubernetes deployment script, set these variables (and those above) and run `cd kube && bash deploy.sh`
+

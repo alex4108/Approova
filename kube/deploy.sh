@@ -13,14 +13,14 @@ K8S_DEPLOYMENT_NAME="approova-${ENV}"
 chkErr
 kube_env=$(echo "${ENV}" | awk '{print tolower($0)}')
 chkErr
-runDocker="docker run -v ${TRAVIS_BUILD_DIR}/kube:/kube bitnami/kubectl:latest"
-chkErr
+
+rm -rf deployment.yml
+cp -r deployment.yml.template deployment.yml
 
 sed -i -e "s|ENVIRONMENT|${ENV}|g" deployment.yml
 sed -i -e "s|environment|${kube_env}|g" deployment.yml
 sed -i -e "s|COMMIT|${TRAVIS_COMMIT}|g" deployment.yml
-sed -i -e "s|BOT-TOKEN|${BOT_TOKEN}|g" deployment.yml
-sed -i -e 's|DEPLOYMENT_NAME|'"${K8S_DEPLOYMENT_NAME}"'|g' deployment.yml
+sed -i -e "s|BOT-TOKEN|${APPROOVA_DISCORD_TOKEN}|g" deployment.yml
 sed -i -e 's|DOCKER_USER|'"${DOCKER_USER}"'|g' deployment.yml
 sed -i -e 's|KUBE_CA_CERT|'"${KUBE_CA_CERT}"'|g' kubeconfig
 sed -i -e 's|KUBE_ENDPOINT|'"${KUBE_ENDPOINT}"'|g' kubeconfig
@@ -28,14 +28,21 @@ sed -i -e 's|KUBE_ADMIN_CERT|'"${KUBE_ADMIN_CERT}"'|g' kubeconfig
 sed -i -e 's|KUBE_ADMIN_KEY|'"${KUBE_ADMIN_KEY}"'|g' kubeconfig
 chkErr
 
+
+runDocker="docker run -v ${TRAVIS_BUILD_DIR}/kube:/kube bitnami/kubectl:latest"
+chkErr
 kubeFlags="--kubeconfig /kube/kubeconfig --insecure-skip-tls-verify=true"
+kubectl="${runDocker} ${kubeFlags}"
 
-${runDocker} ${kubeFlags} delete secret approova-${kube_env}-docker
-${runDocker} ${kubeFlags} delete secret approova-${kube_env}-discord
-${runDocker} ${kubeFlags} create secret docker-registry approova-${kube_env}-docker --docker-server=https://index.docker.io/v2/ --docker-username=${DOCKER_USER} --docker-password=\"${DOCKER_PASS}\" --docker-email=${DOCKER_EMAIL} 
+${kubectl} delete secret approova-${kube_env}-discord
+${kubectl} create secret generic approova-${kube_env}-discord --from-literal=username="discord" --from-literal=password="${APPROOVA_DISCORD_TOKEN}"
 chkErr
-${runDocker} ${kubeFlags} create secret generic approova-${kube_env}-discord --from-literal=username=\"discord\" --from-literal=password=\"${BOT_TOKEN}\"
-chkErr
-${runDocker} ${kubeFlags} apply -f /kube/deployment.yml
+${kubectl} apply -f /kube/deployment.yml
 chkErr
 
+if ! ${kubectl} rollout status deployment approova-${kube_env}; then
+    echo "k8s failed to deploy!"
+    ${kubectl} rollout undo deployment approova-${kube_env}
+    ${kubectl} rollout status deployment approova-${kube_env}
+    exit 1
+fi

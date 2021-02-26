@@ -15,11 +15,11 @@ spec:
       restartPolicy: Always
       containers:
       - name: DEPLOYMENT_NAME
-        image: DOCKER_USER/approova:v2-COMMIT
+        image: DOCKER_USER/approova:COMMIT
         env:
         - name: ENV
           value: "ENVIRONMENT"
-        - name: BOT_TOKEN
+        - name: APPROOVA_DISCORD_TOKEN
           valueFrom:
           secretKeyRef:
             name: approova-environment-discord

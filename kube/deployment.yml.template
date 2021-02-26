@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: approova-environment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: approova-environment
+  template:
+    metadata:
+      labels:
+        name: approova-environment
+    spec:
+      volumes:
+      - name: approova-environment-content
+        persistentVolumeClaim:
+          claimName: approova-environment-pvc
+      restartPolicy: Always
+      containers:
+      - name: approova-environment
+        image: alex4108/approova:COMMIT
+        volumeMounts:
+        - mountPath: "/content"
+          name: approova-environment-content
+        env:
+        - name: APPROOVA_DISCORD_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: approova-environment-discord
+              key: password
