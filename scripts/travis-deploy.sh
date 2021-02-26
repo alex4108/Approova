@@ -66,8 +66,15 @@ bumpVersion() {
     next_version="$(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f1).$(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f2).${next_version_minor}" > VERSION
     git add CHANGELOG.md
     git add VERSION
-    git commit -S -m "Reset VERSION & CHANGELOG.md"
+    git commit -S -m "(CI) Reset VERSION & CHANGELOG.md"
     git push
+    
+    # update docker-compose tag?
+    freshClone
+    git checkout master
+    sed -i "s|alex4108/approova.*|alex4108/approova:${version}" docker-compose.yml
+    git add docker-compose.yml
+    git commit -S -m "(CI) Update docker-compose.yml"
 }
 
 if [[ "${STATE}" == "BEFORE" ]]; then 
