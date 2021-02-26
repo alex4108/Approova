@@ -4,3 +4,4 @@ sqlite.db
 .env
 .vscode/
 */private/*
+scripts/local-me.sh
