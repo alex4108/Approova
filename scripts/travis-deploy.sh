@@ -51,10 +51,6 @@ if [[ "${STATE}" == "BEFORE" ]]; then # Tag the release
     gitConfig
     export TRAVIS_TAG="${version}"
     git tag -s ${version} -m "Release ${version}"
-    mkdir -p ${TRAVIS_BUILD_DIR}/.ssh
-    chmod 700 ${TRAVIS_BUILD_DIR}/.ssh
-    mv ${TRAVIS_BUILD_DIR}id_rsa ${TRAVIS_BUILD_DIR}/.ssh/id_rsa
-    chmod 400 ${TRAVIS_BUILD_DIR}/.ssh/id_rsa
     git push
 
 elif [[ "${STATE}" == "AFTER" ]]; then
