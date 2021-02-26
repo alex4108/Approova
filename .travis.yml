@@ -3,10 +3,6 @@ language: python
 python:
     - 3.8
 cache: pip
-branches:
-    only:
-        - master
-        - kube
 before_install:
   - sudo apt purge --auto-remove qemu-user qemu-user-binfmt binfmt-support
   - sudo apt install qemu-user
