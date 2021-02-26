@@ -4,6 +4,11 @@ set -x
 
 cd ${TRAVIS_BUILD_DIR}/scripts
 
+if [[ "${TRAVIS_COMMIT_MESSAGE}" == "Reset VERSION & CHANGELOG.md" ]]; then
+    echo "Skipping build because this doesn't have any actual changes."
+    exit 0
+fi
+
 if [[ "${SKIP_TEST}" != "1" ]]; then
     bash 1-test.sh
 fi
