@@ -5,6 +5,11 @@ set -euo pipefail
 STATE=$1
 version=$(cat ${TRAVIS_BUILD_DIR}/VERSION)
 
+freshClone() { 
+    mkdir -p /tmp
+    cd /tmp
+    git clone git@github.com:alex4108/approova.git
+}
 
 # Configures git for GPG Signing
 gitConfig() { 
@@ -35,31 +40,22 @@ bumpVersion() {
     git push
 }
 
-# Resets files between releases
-reset() { 
-    OLDPWD=$(pwd)
-    mkdir /tmp/
-    cd /tmp/
-    git clone git@github.com:alex4108/approova.git
-    cd approova
-    bumpVersion
-    cd ${OLDPWD}
-}
-
-
 if [[ "${STATE}" == "BEFORE" ]]; then # Tag the release
     gitConfig
+    freshClone
+    cd /tmp/approova
     export TRAVIS_TAG="${version}"
     git tag -s ${version} -m "Release ${version}"
     git push
 
 elif [[ "${STATE}" == "AFTER" ]]; then
-    ## Update the release w/ CHANGELOD.md contents
+    ## Update the release w/ CHANGELOG.md contents
     last_release_id=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/alex4108/approova/releases | jq -r '.[0].id')
     changelog=$(cat ${TRAVIS_BUILD_DIR}/CHANGELOG.md | sed "0,/RELEASE_VERSION/{s/RELEASE_VERSION/${version}/}")
 
     curl -X PATCH https://api.github.com/repos/alex4108/approova/releases/${last_release_id} -u alex4108:${GITHUB_PAT} -d "{\"name\": \"v${version}\", \"body\": \"${changelog}\"}"
     # curl -X PATCH https://api.github.com/repos/alex4108/approova/releases/${last_release_id} -u alex4108:${GITHUB_PAT} -d "{\"draft\": \"false\"}"
 
-    reset
+    cd /tmp/approova/
+    bumpVersion
 fi
