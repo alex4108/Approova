@@ -10,6 +10,19 @@ set -x
 STATE=$1
 version=$(cat ${TRAVIS_BUILD_DIR}/VERSION)
 
+fixDockerCompose() { 
+    sed -i "s|alex4108/approova.*|alex4108/approova:${version}|g" docker-compose.yml
+    if [[ "$1" == "commit" ]]; then
+        git add docker-compose.yml
+        git commit -S -m "(CI) Update docker-compose.yml"
+    fi
+}
+
+scrubSecrets() { 
+    cd ${TRAVIS_BUILD_DIR}
+    git reset --hard
+}
+
 freshClone() { 
     OLD_PWD=$(pwd)
     ts=$(date +%s)
@@ -51,8 +64,8 @@ gitConfig() {
     chmod 700 ~/.ssh
     mv /tmp/id_rsa ~/.ssh/id_rsa
     chmod 400 ~/.ssh/id_rsa
-    git config user.name "Alex Schittko"
-    git config user.email "alex4108@live.com"
+    git config --global user.name "Alex Schittko"
+    git config --global user.email "alex4108@live.com"
     git config --global user.signingkey DFF8E003A6969029
     echo -e "Host github.com\n    StrictHostKeyChecking no" > ~/.ssh/config
 }
@@ -63,18 +76,18 @@ bumpVersion() {
     git checkout develop
     echo -e "# Release RELEASE_VERSION\n\n## Breaking Changes\n\n*\n\n## Bugs\n\n*\n\n## Improvements\n\n*\n""" > CHANGELOG.md
     next_version_minor="$(( $(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f3) + 1 ))"
-    next_version="$(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f1).$(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f2).${next_version_minor}" > VERSION
+    next_version="$(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f1).$(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f2).${next_version_minor}"
+    echo ${next_version} > VERSION
+    sed -i "s|alex4108/approova.*|alex4108/approova:${next_version}|g" docker-compose.yml
     git add CHANGELOG.md
     git add VERSION
-    git commit -S -m "(CI) Reset VERSION & CHANGELOG.md"
+    git add docker-compose.yml
+    git commit -S -m "(CI) Reset for next version"
     git push
     
-    # update docker-compose tag?
-    freshClone
-    git checkout master
-    sed -i "s|alex4108/approova.*|alex4108/approova:${version}" docker-compose.yml
-    git add docker-compose.yml
-    git commit -S -m "(CI) Update docker-compose.yml"
+    
+    # UNCOMMENT BEFORE GOING TO MASTER
+    # git push 
 }
 
 if [[ "${STATE}" == "BEFORE" ]]; then 
@@ -84,19 +97,26 @@ if [[ "${STATE}" == "BEFORE" ]]; then
 
     git checkout master
     export TRAVIS_TAG="${version}"
+    fixDockerCompose commit
     git tag -s ${version} -m "Release ${version}"
     git push origin ${version}
+
     cd ${TRAVIS_BUILD_DIR}
     git tag ${version} -m "Release ${version}"
+    scrubSecrets
     cd ${OLDPWD}
 
+    
+
 elif [[ "${STATE}" == "AFTER" ]]; then 
+    gitConfig
     # Update the release in Github
     # bump develop's version
     getReleaseId
     sed -i "0,/RELEASE_VERSION/{s/RELEASE_VERSION/${version}/}" ${TRAVIS_BUILD_DIR}/CHANGELOG.md
-    sed -i ':a;N;$!ba;s/\n/\\\\n/g' ${TRAVIS_BUILD_DIR}/CHANGELOG.md
-    curl -X PATCH https://api.github.com/repos/alex4108/Approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"name\": \"v${version}\", \"body\": \"$(cat ${TRAVIS_BUILD_DIR}/CHANGELOG.md)\"}"
+    sed -i ':a;N;$!ba;s|\n|<br />|g' ${TRAVIS_BUILD_DIR}/CHANGELOG.md
+    curl -X PATCH https://api.github.com/repos/alex4108/Approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"tag_name\", \"${version}\"\"name\": \"v${version}\", \"body\": \"$(cat ${TRAVIS_BUILD_DIR}/CHANGELOG.md)\"}"
+    # UNCOMMENT BEFORE GOING TO MASTER
     # curl -X PATCH https://api.github.com/repos/alex4108/Approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"draft\": \"false\"}"
 
     bumpVersion
