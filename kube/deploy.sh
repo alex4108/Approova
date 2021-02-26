@@ -17,9 +17,15 @@ chkErr
 rm -rf deployment.yml
 cp -r deployment.yml.template deployment.yml
 
+if [[ "${TRAVIS_BRANCH}" == "master" && "${TRAVIS_PULL_REQUEST}" != "false" ]]; then
+    COMMIT=$(cat ${TRAVIS_BUILD_DIR}/VERSION)
+else
+    COMMIT=${TRAVIS_COMMIT}
+fi
+
 sed -i -e "s|ENVIRONMENT|${ENV}|g" deployment.yml
 sed -i -e "s|environment|${kube_env}|g" deployment.yml
-sed -i -e "s|COMMIT|${TRAVIS_COMMIT}|g" deployment.yml
+sed -i -e "s|COMMIT|${COMMIT}|g" deployment.yml
 sed -i -e 's|KUBE_CA_CERT|'"${KUBE_CA_CERT}"'|g' kubeconfig
 sed -i -e 's|KUBE_ENDPOINT|'"${KUBE_ENDPOINT}"'|g' kubeconfig
 sed -i -e 's|KUBE_ADMIN_CERT|'"${KUBE_ADMIN_CERT}"'|g' kubeconfig
