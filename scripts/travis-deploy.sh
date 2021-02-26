@@ -7,9 +7,13 @@ STATE=$1
 version=$(cat ${TRAVIS_BUILD_DIR}/VERSION)
 
 freshClone() { 
-    mkdir -p /tmp
-    cd /tmp
+    OLD_PWD=$(PWD)
+    ts=$(date +%s)
+    mkdir -p /tmp/
+    mkdir -p /tmp/${ts}
+    cd /tmp/${ts}
     git clone git@github.com:alex4108/Approova.git
+    cd /tmp/${ts}/approova
 }
 
 getReleaseId() { 
@@ -19,7 +23,7 @@ getReleaseId() {
     try="1"
     while [[ "${trying}" == "1" ]]; do
         release_id=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/alex4108/approova/releases | jq -r ".[] | select(.tag_name == \"${version}\")")
-        if [[ "${release_id}" == "null" ]]; then
+        if [[ "${release_id}" == "null" || "${release_id}" == "" ]]; then
             echo "Failed!"
             echo "Sleeping ${sleep} seconds"
             sleep ${sleep}
@@ -51,6 +55,7 @@ gitConfig() {
 
 # Bumps the version
 bumpVersion() { 
+    freshClone
     git checkout develop
     echo -e "# Release RELEASE_VERSION\n\n## Breaking Changes\n\n*\n\n## Bugs\n\n*\n\n## Improvements\n\n*\n""" > CHANGELOG.md
     next_version_minor="$(( $(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f3) + 1 ))"
@@ -58,18 +63,16 @@ bumpVersion() {
     git add CHANGELOG.md
     git add VERSION
     git commit -S -m "Reset VERSION & CHANGELOG.md"
-    git push tags
+    git push
 }
 
 if [[ "${STATE}" == "BEFORE" ]]; then # Tag the release
     gitConfig
     freshClone
-    cd /tmp/Approova
     git checkout master
     export TRAVIS_TAG="${version}"
     git tag -s ${version} -m "Release ${version}"
     git push origin ${version}
-    OLDPWD=$(pwd)
     cd ${TRAVIS_BUILD_DIR}
     git tag ${version} -m "Release ${version}"
     cd ${OLDPWD}
@@ -82,6 +85,5 @@ elif [[ "${STATE}" == "AFTER" ]]; then
     curl -X PATCH https://api.github.com/repos/alex4108/approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"name\": \"v${version}\", \"body\": \"$(cat ${TRAVIS_BUILD_DIR}/CHANGELOG.md)\"}"
     # curl -X PATCH https://api.github.com/repos/alex4108/approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"draft\": \"false\"}"
 
-    cd /tmp/Approova/
     bumpVersion
 fi
