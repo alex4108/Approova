@@ -15,9 +15,9 @@ fi
 
 # If this is tagged, run travis-release.sh
 if [[ "${TRAVIS_TAG}" == "" ]]; then
-    export ENV=LIVE
-    bash travis-release.sh
-else
     export ENV=TEST
     bash travis-commit.sh
+else
+    export ENV=LIVE
+    bash travis-release.sh
 fi

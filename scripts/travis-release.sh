@@ -2,7 +2,7 @@
 set -euo pipefail
 set -x
 
-source ${TRAVIS_BUILD_DIR}/common.sh
+source ${TRAVIS_BUILD_DIR}/scripts/common.sh
 
 
 commit=$(git rev-list -n 1 ${TRAVIS_TAG})

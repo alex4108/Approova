@@ -2,7 +2,7 @@
 set -euo pipefail
 set -x
 
-source ${TRAVIS_BUILD_DIR}/common.sh
+source ${TRAVIS_BUILD_DIR}/scripts/common.sh
 DOCKER_PLATFORMS="linux/amd64,linux/arm/v7,linux/arm64/v8"
 
 cd ${TRAVIS_BUILD_DIR}
