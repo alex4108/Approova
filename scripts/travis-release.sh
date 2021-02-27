@@ -3,7 +3,7 @@ set -euo pipefail
 
 source ${TRAVIS_BUILD_DIR}/scripts/common.sh
 
-commit=$(git rev-list ${TRAVIS_TAG} -n 2 | tail -n1)
+commit=$(git rev-list ${TRAVIS_TAG} -n 1)
 
 getState() { 
     builds=$(curl -H "Travis-API-Version: 3" -H "Authorization: token ${TRAVIS_API_TOKEN}" https://api.travis-ci.com/repo/15450713/builds)
