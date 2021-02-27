@@ -7,8 +7,8 @@
 set -euo pipefail
 set -x
 
-bash ${TRAVIS_BUILD_DIR}/scripts/travis-check_if_abort.sh
-if [[ "${ABORT}" == "true" ]];
+ABORT=$(bash ${TRAVIS_BUILD_DIR}/scripts/travis-check_if_abort.sh)
+if [[ "${ABORT}" == "true" ]]; then
     exit 0
 fi
 
