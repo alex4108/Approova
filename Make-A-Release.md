@@ -1,3 +1,6 @@
 # How to make a release
 
-* Apply a tag to master
+```
+next_version="0.0.2"
+git checkout master && git pull && git tag -s ${next_version} -m "" && git push --tags
+```

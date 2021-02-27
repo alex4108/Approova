@@ -8,6 +8,7 @@ commit=$(git rev-list ${TRAVIS_TAG} -n 1)
 getState() { 
     builds=$(curl -H "Travis-API-Version: 3" -H "Authorization: token ${TRAVIS_API_TOKEN}" https://api.travis-ci.com/repo/15450713/builds)
     state=$(echo ${builds} | jq -r --arg COMMIT "${commit}" ' [ .builds | map({ "id": .id, "state": .state, "commit": .commit.sha, "branch": .branch.name, "ts": .updated_at }) | sort_by(.ts)[] | select(.commit==$COMMIT) ] | .[-1] | .state')
+    echo "Waiting for ${commit} build to finish :: ${state}"
 }
 
 # * Check the build passed
@@ -15,6 +16,7 @@ getState() {
 removeTag() { 
     freshClone
     gitConfig
+    git tag -d ${TRAVIS_TAG}
     git push --delete origin ${TRAVIS_TAG}
 }
 
@@ -33,6 +35,8 @@ while true; do
     fi
 done
 
+echo "Ready to go!"
+exit 0
 # * Re-tag the container
 dockerLogin
 docker pull alex4108/approova:${commit}
