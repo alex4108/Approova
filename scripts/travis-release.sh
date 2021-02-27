@@ -6,7 +6,7 @@ source ${TRAVIS_BUILD_DIR}/scripts/common.sh
 commit=$(git rev-list ${TRAVIS_TAG} -n 1)
 
 getState() { 
-    builds=$(curl -H "Travis-API-Version: 3" -H "Authorization: token ${TRAVIS_API_TOKEN}" https://api.travis-ci.com/repo/15450713/builds)
+    builds=$(curl -s -H "Travis-API-Version: 3" -H "Authorization: token ${TRAVIS_API_TOKEN}" https://api.travis-ci.com/repo/15450713/builds)
     state=$(echo ${builds} | jq -r --arg COMMIT "${commit}" ' [ .builds | map({ "id": .id, "state": .state, "commit": .commit.sha, "branch": .branch.name, "ts": .updated_at }) | sort_by(.ts)[] | select(.commit==$COMMIT and .branch=="master") ] | .[].state')
     echo "Waiting for ${commit} build to finish :: ${state}"
 }

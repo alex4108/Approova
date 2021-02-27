@@ -12,6 +12,8 @@ fi
 STATE=$1
 version=${TRAVIS_TAG}
 
+source ${TRAVIS_BUILD_DIR}/scripts/common.sh
+
 # Resets the changelog
 resetChangelog() { 
     freshClone
