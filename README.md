@@ -120,7 +120,7 @@ Be sure to edit these configurations to match your environment's needs.
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
 1. Fork the project
-1. Create your feature branch, branching from `develop` (`git checkout -b feature/AmazingFeature develop`)
+1. Create your feature branch (`git checkout -b feature/AmazingFeature`)
 1. Make changes, and update `CHANGELOG.md` to describe them.
 1. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 1. Push to the branch (`git push origin feature/AmazingFeature`)
