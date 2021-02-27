@@ -257,12 +257,12 @@ async def setApproverChannel(ctx, channelName):
 
         except Exception as e:
             log.error(e)
-            await ctx.send("There was an error saving to the database.  Please alert my maintainer!")
+            await ctx.send("There was an error saving to the database.  Please raise an issue on GitHub: https://github.com/alex4108/Approova/")
             return
             
     except discord.DiscordException as e:
         log.error(e)
-        await ctx.send("There was an exception trying to get the approval channel")
+        await ctx.send("There was an exception trying to get the approval channel.  If you're unable to work around this, please raise an issue on GitHub: https://github.com/alex4108/Approova/")
         pass
 
     
@@ -295,12 +295,12 @@ async def setApproverRole(ctx, roleName):
     
         except Exception as e:
             log.error(e)
-            await ctx.send("There was an error saving to the database.  Please alert my maintainer!")
+            await ctx.send("There was an error saving to the database.  Please raise an issue on GitHub: https://github.com/alex4108/Approova/")
             return
 
     except discord.DiscordException as e:
         log.error(e)
-        await ctx.send("There was an exception trying to get the approval channel")
+        await ctx.send("There was an exception trying to get the approval channel. If you're unable to work around this, please raise an issue on GitHub: https://github.com/alex4108/Approova/")
         pass
 
 @bot.command()
@@ -330,12 +330,12 @@ async def setPublicChannel(ctx, channelName):
     
         except Exception as e:
             log.error(e)
-            await ctx.send("There was an error saving to the database.  Please alert my maintainer!")
+            await ctx.send("There was an error saving to the database.  Please raise an issue on GitHub: https://github.com/alex4108/Approova/")
             return
 
     except discord.DiscordException as e:
         log.error(e)
-        await ctx.send("There was an exception trying to get the approval channel")
+        await ctx.send("There was an exception trying to get the approval channel. If you're unable to work around this, please raise an issue on GitHub: https://github.com/alex4108/Approova/")
         return
     
     
@@ -367,12 +367,12 @@ async def setPublicRole(ctx, roleName):
 
         except Exception as e:
             log.error(e)
-            await ctx.send("There was an error saving to the database.  Please alert my maintainer!")
+            await ctx.send("There was an error saving to the database.  Please raise an issue on GitHub: https://github.com/alex4108/Approova/")
             return
     
     except discord.DiscordException as e:
         log.error(e)
-        await ctx.send("There was an exception trying to get the approval channel")
+        await ctx.send("There was an exception trying to get the approval channel. If you're unable to work around this, please raise an issue on GitHub: https://github.com/alex4108/Approova/")
         return
     
     
@@ -388,6 +388,7 @@ async def showConfig(ctx):
     config = get_guild_config(ctx.guild)
     log.debug(config)
     await ctx.send("Public Role: " + str(config['pubrole']) + "\nPublic Channel: " + str(config['pubchannel']) + "\nApprover Role: " + str(config['role']) + "\nApprover Channel: " + str(config['channel']) )
+    await ctx.send("Approova, proudly maintained by Alex: https://github.com/alex4108/Approova/")
     pass
 
 if os.getenv("TRAVIS") != None:
