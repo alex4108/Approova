@@ -8,6 +8,9 @@ set -euo pipefail
 set -x
 
 bash ${TRAVIS_BUILD_DIR}/scripts/travis-check_if_abort.sh
+if [[ "${ABORT}" == "true" ]];
+    exit 0
+fi
 
 STATE=$1
 version=$(cat ${TRAVIS_BUILD_DIR}/VERSION)
