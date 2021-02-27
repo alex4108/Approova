@@ -5,6 +5,9 @@ set -x
 cd ${TRAVIS_BUILD_DIR}/scripts
 
 bash ${TRAVIS_BUILD_DIR}/scripts/travis-check_if_abort.sh
+if [[ "${ABORT}" == "true" ]];
+    exit 0
+fi
 
 if [[ "${LOCAL_BUILD}" != "1" ]]; then
     bash travis-bootstrap.sh
