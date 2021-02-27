@@ -4,8 +4,35 @@ set -x
 
 source ${TRAVIS_BUILD_DIR}/scripts/common.sh
 
-commit=$(git rev-list -n 1 ${TRAVIS_TAG})
+commit=$(git rev-list ${TRAVIS_TAG} -n 2 | tail -n1)
 
+getState() { 
+    builds=$(curl -H "Travis-API-Version: 3" -H "Authorization: token ${TRAVIS_API_TOKEN}" https://api.travis-ci.com/repo/15450713/builds)
+    state=$(echo ${builds} | jq -r --arg COMMIT "${commit}" ' [ .builds | map({ "id": .id, "state": .state, "commit": .commit.sha, "branch": .branch.name, "ts": .updated_at }) | sort_by(.ts)[] | select(.commit==$COMMIT) ] | .[-1] | .state')
+}
+
+# * Check the build passed
+
+removeTag() { 
+    freshClone
+    gitConfig
+    git push --delete origin ${TRAVIS_TAG}
+}
+
+getState
+while true; do
+    if [[ "${state}" == "success" ]]; then
+        echo "Build success"
+        break
+    elif [[ "${state}" == "failed" || "${state}" == "canceled" || "${state}" == "errored" ]]; then
+        echo "Build failed"
+        removeTag
+        exit 1
+    else
+        sleep 5
+        getState
+    fi
+done
 
 # * Re-tag the container
 dockerLogin
