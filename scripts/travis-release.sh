@@ -36,7 +36,7 @@ while true; do
 done
 
 echo "Ready to go!"
-exit 0
+
 # * Re-tag the container
 dockerLogin
 docker pull alex4108/approova:${commit}
