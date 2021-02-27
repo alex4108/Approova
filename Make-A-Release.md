@@ -6,4 +6,9 @@
 
 * `git merge develop`
 
+Merge conflict handling:
+Leave RELEASE_VERSION in Changelog
+Let develop's VERSION override master
+
+
 * `git push`
