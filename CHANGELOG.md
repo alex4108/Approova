@@ -20,3 +20,4 @@
 
 * Modified bot to inform discord users of approval rejections
 
+* Updated contact details in bot
