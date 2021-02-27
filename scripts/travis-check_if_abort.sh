@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 if [[ "${TRAVIS_COMMIT_MESSAGE}" == "(CI)"* ]]; then
-    echo "Aborting as this was an automated commit."
-    export ABORT="true"
+    echo "true"
 else
-    export ABORT="false"
+    echo "false"
 fi

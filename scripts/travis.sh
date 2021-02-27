@@ -4,7 +4,7 @@ set -x
 
 cd ${TRAVIS_BUILD_DIR}/scripts
 
-bash ${TRAVIS_BUILD_DIR}/scripts/travis-check_if_abort.sh
+ABORT=$(bash ${TRAVIS_BUILD_DIR}/scripts/travis-check_if_abort.sh)
 if [[ "${ABORT}" == "true" ]]; then
     exit 0
 fi

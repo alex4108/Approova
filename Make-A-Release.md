@@ -2,6 +2,8 @@
 
 * Is develop's build passing?
 
-* `git checkout develop`
+* `git checkout master`
 
-* `git merge master`
+* `git merge develop`
+
+* `git push`
