@@ -6,7 +6,7 @@ cache: pip
 script:
 - bash scripts/travis.sh
 before_deploy:
-- bash scripts/travis-deploy.sh BEFORE
+- bash scripts/travis-release-hooks.sh BEFORE
 deploy:
 - skip_cleanup: false
   api_key: $GITHUB_PAT
@@ -14,6 +14,6 @@ deploy:
   provider: releases
   on:
     branch: master
-    tags: false
+    tags: true
 after_deploy:
-- bash scripts/travis-deploy.sh AFTER
+- bash scripts/travis-release-hooks.sh AFTER

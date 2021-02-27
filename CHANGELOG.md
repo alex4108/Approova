@@ -1,5 +1,3 @@
-# Release 1.0.10
-
 ## Breaking Changes
 
 * None!

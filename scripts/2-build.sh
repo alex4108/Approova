@@ -2,6 +2,7 @@
 set -euo pipefail
 set -x
 
+source ${TRAVIS_BUILD_DIR}/common.sh
 DOCKER_PLATFORMS="linux/amd64,linux/arm/v7,linux/arm64/v8"
 
 cd ${TRAVIS_BUILD_DIR}
@@ -9,7 +10,7 @@ cd ${TRAVIS_BUILD_DIR}
 DOCKER_TAG="${DOCKER_USER}/approova:${TRAVIS_COMMIT}"
 
 if [[ "${SKIP_PUSH}" != "1" ]]; then
-    docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
+    dockerLogin
 fi
 
 docker buildx create --use

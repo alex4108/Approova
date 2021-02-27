@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# Deploys to GitHub Releases
-# Rotates version number
-# Modifies github release to include CHANGELOG
 
 set -euo pipefail
 set -x
@@ -13,22 +10,31 @@ if [[ "${ABORT}" == "true" ]]; then
 fi
 
 STATE=$1
-version=$(cat ${TRAVIS_BUILD_DIR}/VERSION)
+version=${TRAVIS_TAG}
 
-fixFilesForMaster() { 
-    sed -i "s|build: .|image: alex4108/approova:${version}|g" docker-compose.yml
-    sed -i "0,/RELEASE_VERSION/{s/RELEASE_VERSION/${version}/}" CHANGELOG.md
-    git add docker-compose.yml
+# Resets the changelog
+resetChangelog() { 
+    echo -e "## Breaking Changes\n\n*\n\n## Bugs\n\n*\n\n## Improvements\n\n*\n""" > CHANGELOG.md
     git add CHANGELOG.md
-    git commit -S -m "(CI) Update version"
+    git commit -S -m "(CI) Update release version"
     git push origin
 }
 
-scrubSecrets() { 
+# Updates docker-compose.yml before releasing, to match the new version number
+updateDockerCompose() {
+    sed -i -e "s|image: alex4108/approova:.*|image: alex4108/approova:${version}|g" docker-compose.yml
+    git add docker-compose.yml
+    git commit -S -m "(CI) Update release version"
+    git push origin
+}
+
+# Reset to delete any artifacts leftover from build
+resetRepo() { 
     cd ${TRAVIS_BUILD_DIR}
     git reset --hard
 }
 
+# Makes a fresh clone of the repo
 freshClone() { 
     OLD_PWD=$(pwd)
     ts=$(date +%s)
@@ -39,6 +45,7 @@ freshClone() {
     cd /tmp/${ts}/Approova
 }
 
+# Gets the release ID associated with this release from GitHub
 getReleaseId() { 
     trying="1"
     max_tries="10"
@@ -63,7 +70,7 @@ getReleaseId() {
     done
 }
 
-# Configures git for GPG Signing
+# Configures git for GPG Signing & SSH Authentication
 gitConfig() { 
     gpg --import /tmp/travis.gpg
     mkdir -p ~/.ssh
@@ -76,35 +83,13 @@ gitConfig() {
     echo -e "Host github.com\n    StrictHostKeyChecking no" > ~/.ssh/config
 }
 
-# Bumps the version
-bumpVersion() { 
-    freshClone
-    git checkout develop
-    echo -e "# Release RELEASE_VERSION\n\n## Breaking Changes\n\n*\n\n## Bugs\n\n*\n\n## Improvements\n\n*\n""" > CHANGELOG.md
-    next_version_minor="$(( $(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f3) + 1 ))"
-    next_version="$(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f1).$(cat ${TRAVIS_BUILD_DIR}/VERSION | cut -d. -f2).${next_version_minor}"
-    echo ${next_version} > VERSION
-    git add CHANGELOG.md
-    git add VERSION
-    git commit -S -m "(CI) Reset for next version"
-    git push
-}
 
 # Tag the release
 # Fix docker compose
 if [[ "${STATE}" == "BEFORE" ]]; then 
     gitConfig
-    freshClone
-
-    git checkout master
-    fixFilesForMaster
-    git tag -s ${version} -m "Release ${version}"
-    git push origin ${version}
-
-    cd ${TRAVIS_BUILD_DIR}
-    git tag ${version} -m "Release ${version}"
-    scrubSecrets
-    
+    resetRepo
+    updateDockerCompose
 
 # Update the release in Github
 # bump develop's version
@@ -112,9 +97,8 @@ elif [[ "${STATE}" == "AFTER" ]]; then
     gitConfig
     getReleaseId
     sed -i ':a;N;$!ba;s|\n|\\r\\n|g' ${TRAVIS_BUILD_DIR}/CHANGELOG.md
-    sed -i "0,/RELEASE_VERSION/{s/RELEASE_VERSION/${version}/}" ${TRAVIS_BUILD_DIR}/CHANGELOG.md
     curl -X PATCH https://api.github.com/repos/alex4108/Approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"tag_name\": \"${version}\", \"name\": \"v${version}\", \"body\": \"$(cat ${TRAVIS_BUILD_DIR}/CHANGELOG.md)\"}"
     curl -X PATCH https://api.github.com/repos/alex4108/Approova/releases/${release_id} -u alex4108:${GITHUB_PAT} -d "{\"draft\": \"false\"}"
-    bumpVersion
+    resetChangelog
 fi
 

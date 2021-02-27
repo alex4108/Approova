@@ -45,6 +45,8 @@ At this point, Approova will monitor for new joins to the Guild and execute the 
 
 # Running in Development
 
+The master branch is the latest working copy of the project.  It should be considered unstable.
+
 * Create a Discord Bot Token as outlined in the [Production Notes](#Production-Notes) section.
 
 ## First Time Setup
@@ -61,6 +63,10 @@ export APPROOVA_DISCORD_TOKEN=9999
 export APPROOVA_DB_PATH=$(pwd)/sqlite.db
 python src/bot.py
 ```
+
+## docker-compose
+
+You should update your docker-compose to `build: .` instead of `image: alex4108/approova:version` if you want to test the build in Docker.
 
 # Running in Production
 
