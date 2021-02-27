@@ -17,7 +17,7 @@ chkErr
 rm -rf deployment.yml
 cp -r deployment.yml.template deployment.yml
 
-if [[ "${TRAVIS_BRANCH}" == "master" && "${TRAVIS_PULL_REQUEST}" == "false" ]]; then
+if [[ "${TRAVIS_TAG}" != "" ]]; then
     COMMIT=${TRAVIS_TAG}
 else
     COMMIT=${TRAVIS_COMMIT}
