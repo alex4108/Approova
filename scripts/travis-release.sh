@@ -22,7 +22,7 @@ removeTag() {
 
 getState
 while true; do
-    if [[ "${state}" == "success" ]]; then
+    if [[ "${state}" == "success" || "${state}" == "passed" ]]; then
         echo "Build success"
         break
     elif [[ "${state}" == "failed" || "${state}" == "canceled" || "${state}" == "errored" ]]; then
