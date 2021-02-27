@@ -9,7 +9,8 @@ before_deploy:
 - bash scripts/travis-release-hooks.sh BEFORE
 deploy:
 - skip_cleanup: false
-  api_key: $GITHUB_PAT
+  user: "alex4108"
+  password: "$GITHUB_PAT"
   draft: true
   provider: releases
   on:
