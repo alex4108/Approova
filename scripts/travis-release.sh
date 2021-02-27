@@ -6,14 +6,6 @@ source ${TRAVIS_BUILD_DIR}/scripts/common.sh
 
 commit=$(git rev-list -n 1 ${TRAVIS_TAG})
 
-getState() { 
-    state=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/alex4108/approova/commits/${commit}/status)
-}
-
-# * Check the build passed
-
-getState
-while [[ ${state} != ""]]
 
 # * Re-tag the container
 dockerLogin

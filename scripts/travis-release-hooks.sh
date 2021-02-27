@@ -14,18 +14,22 @@ version=${TRAVIS_TAG}
 
 # Resets the changelog
 resetChangelog() { 
+    freshClone
     echo -e "## Breaking Changes\n\n*\n\n## Bugs\n\n*\n\n## Improvements\n\n*\n""" > CHANGELOG.md
     git add CHANGELOG.md
     git commit -S -m "(CI) Update release version"
     git push origin
+    cd ${OLD_PWD}
 }
 
 # Updates docker-compose.yml before releasing, to match the new version number
 updateDockerCompose() {
+    freshClone
     sed -i -e "s|image: alex4108/approova:.*|image: alex4108/approova:${version}|g" docker-compose.yml
     git add docker-compose.yml
     git commit -S -m "(CI) Update release version"
     git push origin
+    cd ${OLD_PWD}
 }
 
 # Reset to delete any artifacts leftover from build
