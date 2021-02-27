@@ -8,7 +8,13 @@ from discord.ext import commands
 import logging as log
 
 
-log.basicConfig(level=log.INFO)
+log.basicConfig(level=log.DEBUG)
+
+log.getLogger('discord').setLevel(log.WARNING)
+log.getLogger('discord.client').setLevel(log.WARNING)
+log.getLogger('discord.gateway').setLevel(log.WARNING)
+
+
 import sqlite3
 
 DOTENV_PATH=os.getenv("APPROOVA_DOTENV_PATH", "/content/.env")
@@ -24,6 +30,9 @@ if TOKEN is None:
 global db
 global db_cursor
 global discord
+
+intents = discord.Intents.default()
+intents.members = True
 
 DB_NAME = "sqlite"
 db_path = os.path.join(DB_PATH)
@@ -65,7 +74,7 @@ db_cursor.execute("""
     )
 """)
 
-bot = commands.Bot(command_prefix='*')
+bot = commands.Bot(command_prefix='*', intents=intents)
 
 
 def is_owner(member):
@@ -97,6 +106,21 @@ def validate_guild_config(guild):
 
     return True
 
+# Returns true/false if the passed string is a discord link
+def is_link(input):
+    if input.startswith("<#") and input.endswith(">"):
+        return True
+
+    return False
+
+# Strips a discord link and returns the integer value
+def resolve_link(input):
+    if not is_link(input):
+        return False
+    else:
+        input = input.replace("<#", "")
+        input = input.replace(">", "")
+        return int(input)
 
 def get_guild_config(guild): 
     """ Returns related config for the guild """
@@ -153,6 +177,8 @@ async def on_ready():
 @bot.event
 async def on_member_join(member):
     global db_cursor
+
+    log.debug("on_member_join triggered")
 
     # Break if not configured
     if (not validate_guild_config(member.guild)):
@@ -215,6 +241,7 @@ async def on_reaction_add(reaction, user):
 
             if not approved:
                 log.info("Denied approval for " + thisMember.name + " by " + user.name + " because insufficient role")
+                await config['channel'].send("Denied approval for <@" + str(user.id) + "> by <@" + str(thisMember.id) + "> because the approver does not have the sufficient role.")
                 return
 
             await thisMember.add_roles(config['pubrole'])
@@ -222,11 +249,8 @@ async def on_reaction_add(reaction, user):
             await config['channel'].send("<@" + str(user.id) + "> approved <@" + str(thisMember.id) + ">")
             db_cursor.execute("DELETE FROM pending_approvals WHERE message_id = " + str(approval[1]) + " ")
             db.commit()
-            
             pass
-    
-    
-    log.info("Couldn't find an approval request")
+            
     pass
 
 @bot.command()
@@ -241,28 +265,33 @@ async def setApproverChannel(ctx, channelName):
 
 
     try: 
-        channelName = channelName.lstrip('#')
         log.debug("Approval Channel: " + channelName)
-        approval_channel = discord.utils.get(ctx.guild.text_channels, name=channelName) 
+        if is_link(channelName):
+            channelId = resolve_link(channelName)
+            approval_channel = discord.utils.get(ctx.guild.text_channels, id=channelId)
+        else:
+            approval_channel = discord.utils.get(ctx.guild.text_channels, name=channelName)
+
         if (approval_channel is None):
             await ctx.send("I was unable to locate a channel by that name.  Please try again")
             return
-        
+    
         try:
             log.info("Saving Approval Channel " + str(approval_channel.id) + " for guild " + str(ctx.guild.id) ) 
-            db_cursor.execute("insert or replace into approval_channel (guild_id, channel) values (\"" + str(ctx.guild.id) + "\", \"" + str(approval_channel.id) + "\")")
+            db_cursor.execute("delete from approval_channel where guild_id = \"" + str(ctx.guild.id) + "\"")
+            db_cursor.execute("insert into approval_channel (guild_id, channel) values (\"" + str(ctx.guild.id) + "\", \"" + str(approval_channel.id) + "\")")
             db.commit()    
-            await ctx.send("Set approval channel: " + str(approval_channel.name))
+            await ctx.send("Set approval channel: <#" + str(approval_channel.id) +">")
             pass
 
         except Exception as e:
             log.error(e)
-            await ctx.send("There was an error saving to the database.  Please alert my maintainer!")
+            await ctx.send("There was an error saving to the database.  Please raise an issue on GitHub: https://github.com/alex4108/Approova/")
             return
             
     except discord.DiscordException as e:
         log.error(e)
-        await ctx.send("There was an exception trying to get the approval channel")
+        await ctx.send("There was an exception trying to get the approval channel.  If you're unable to work around this, please raise an issue on GitHub: https://github.com/alex4108/Approova/")
         pass
 
     
@@ -288,19 +317,20 @@ async def setApproverRole(ctx, roleName):
 
         try:        
             log.info("Saving Approval Role " + str(approval_role.id) + " for guild " + str(ctx.guild.id) ) 
-            db_cursor.execute("insert or replace into approval_role (guild_id, role) values (\"" + str(ctx.guild.id) + "\", \"" + str(approval_role.id) + "\")")
+            db_cursor.execute("delete from approval_role where guild_id = \"" + str(ctx.guild.id) + "\"")
+            db_cursor.execute("insert into approval_role (guild_id, role) values (\"" + str(ctx.guild.id) + "\", \"" + str(approval_role.id) + "\")")
             db.commit()    
             await ctx.send("Set approval role: " + approval_role.name)
             pass
     
         except Exception as e:
             log.error(e)
-            await ctx.send("There was an error saving to the database.  Please alert my maintainer!")
+            await ctx.send("There was an error saving to the database.  Please raise an issue on GitHub: https://github.com/alex4108/Approova/")
             return
 
     except discord.DiscordException as e:
         log.error(e)
-        await ctx.send("There was an exception trying to get the approval channel")
+        await ctx.send("There was an exception trying to get the approval channel. If you're unable to work around this, please raise an issue on GitHub: https://github.com/alex4108/Approova/")
         pass
 
 @bot.command()
@@ -315,27 +345,32 @@ async def setPublicChannel(ctx, channelName):
 
     # Get the channel ID
     try: 
-        channelName = channelName.lstrip('#')
-        approval_pubchannel = discord.utils.get(ctx.guild.text_channels, name=channelName)
+        if is_link(channelName):
+            channelId = resolve_link(channelName)
+            approval_pubchannel = discord.utils.get(ctx.guild.text_channels, id=channelId)
+        else:
+            approval_pubchannel = discord.utils.get(ctx.guild.text_channels, name=channelName)
+        
         log.debug(approval_pubchannel)
         if (approval_pubchannel is None):
             await ctx.send("I was unable to locate a channel by that name.  Please try again")
             return
         try:
             log.info("Saving Public Channel " + str(approval_pubchannel.id) + " for guild " + str(ctx.guild.id) ) 
-            db_cursor.execute("insert or replace into approval_pubchannel (guild_id, pubchannel) values (\"" + str(ctx.guild.id) + "\", \"" + str(approval_pubchannel.id) + "\")")
+            db_cursor.execute("delete from approval_pubchannel where guild_id = \"" + str(ctx.guild.id) + "\"")
+            db_cursor.execute("insert into approval_pubchannel (guild_id, pubchannel) values (\"" + str(ctx.guild.id) + "\", \"" + str(approval_pubchannel.id) + "\")")
             db.commit()
-            await ctx.send("Set public channel: " + approval_pubchannel.name)
+            await ctx.send("Set public channel: <#" + str(approval_pubchannel.id) + ">")
             pass
     
         except Exception as e:
             log.error(e)
-            await ctx.send("There was an error saving to the database.  Please alert my maintainer!")
+            await ctx.send("There was an error saving to the database.  Please raise an issue on GitHub: https://github.com/alex4108/Approova/")
             return
 
     except discord.DiscordException as e:
         log.error(e)
-        await ctx.send("There was an exception trying to get the approval channel")
+        await ctx.send("There was an exception trying to get the approval channel. If you're unable to work around this, please raise an issue on GitHub: https://github.com/alex4108/Approova/")
         return
     
     
@@ -360,19 +395,20 @@ async def setPublicRole(ctx, roleName):
     
         try:
             log.info("Saving Public Role " + str(approval_pubrole.id) + " for guild " + str(ctx.guild.id) )
-            db_cursor.execute("insert or replace into approval_pubrole (guild_id, pubrole) values (\"" + str(ctx.guild.id) + "\", \"" + str(approval_pubrole.id) + "\")")
+            db_cursor.execute("delete from approval_pubrole where guild_id = \"" + str(ctx.guild.id) + "\"")
+            db_cursor.execute("insert into approval_pubrole (guild_id, pubrole) values (\"" + str(ctx.guild.id) + "\", \"" + str(approval_pubrole.id) + "\")")
             db.commit()
             await ctx.send("Set public role: " + approval_pubrole.name)
             pass
 
         except Exception as e:
             log.error(e)
-            await ctx.send("There was an error saving to the database.  Please alert my maintainer!")
+            await ctx.send("There was an error saving to the database.  Please raise an issue on GitHub: https://github.com/alex4108/Approova/")
             return
     
     except discord.DiscordException as e:
         log.error(e)
-        await ctx.send("There was an exception trying to get the approval channel")
+        await ctx.send("There was an exception trying to get the approval channel. If you're unable to work around this, please raise an issue on GitHub: https://github.com/alex4108/Approova/")
         return
     
     
@@ -388,6 +424,7 @@ async def showConfig(ctx):
     config = get_guild_config(ctx.guild)
     log.debug(config)
     await ctx.send("Public Role: " + str(config['pubrole']) + "\nPublic Channel: " + str(config['pubchannel']) + "\nApprover Role: " + str(config['role']) + "\nApprover Channel: " + str(config['channel']) )
+    await ctx.send("Approova, proudly maintained by Alex: https://github.com/alex4108/Approova/")
     pass
 
 if os.getenv("TRAVIS") != None:

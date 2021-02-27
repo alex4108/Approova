@@ -1,18 +1,23 @@
-# Release 1.0.9
+# Release RELEASE_VERSION
 
 ## Breaking Changes
 
-*
+* None!
 
 ## Bugs
 
-*
+* Modified SQL syntax to use "delete and insert" strategy versus attempt in-place updates.  This will help configuration changes take effect more frequently.
 
 ## Improvements
 
-* Docker support for `linux/arm64/v8` (aarch64)
-* Kubernetes templates
-* Automated deployment for public bot
-* Automated releases to github
-* Kubernetes template restarts pods if unavailable for 10 seconds
+* Bump to discord.py 1.6.0
 
+* Modified Discord configuration to accept channels with just a name, or a #name (links)
+
+* Modified bot's chatter to use #links instead of plain channel names
+
+* Modified bot's logging to be less noisy
+
+* Modified bot to inform discord users of approval rejections
+
+* Updated contact details in bot
