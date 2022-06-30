@@ -8,7 +8,7 @@ from discord.ext import commands
 import logging as log
 
 
-log.basicConfig(level=log.DEBUG)
+log.basicConfig(level=log.DEBUG, format='%(asctime)s %(levelname)-8s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 log.getLogger('discord').setLevel(log.WARNING)
 log.getLogger('discord.client').setLevel(log.WARNING)
