@@ -5,3 +5,5 @@ sqlite.db
 .vscode/
 */private/*
 scripts/local-me.sh
+./bin/*
+./bin
