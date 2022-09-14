@@ -22,7 +22,7 @@ Let existing users of a Discord guild approve new joins
 
 Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-schittko)
 
-# Bot workflow 
+# Bot workflow
 
 1. User joins Discord guild
 1. Approvals Team will be messaged via Approvals Channel
@@ -45,28 +45,13 @@ At this point, Approova will monitor for new joins to the Guild and execute the 
 
 # Running in Development
 
-The master branch is the latest working copy of the project.  It should be considered unstable.
+The master branch is the latest working copy of the project. It should be considered unstable.
 
 * Create a Discord Bot Token as outlined in the [Production Notes](#Production-Notes) section.
 
-## First Time Setup
+Use VSCode Dev Containers extension to get off the ground quickly.
 
-`virtualenv env && source env/bin/activate && pip install -r requirements.txt`
-
-## Returning to an existing project
-
-Be sure to activate the virtalenv, and set needed environment variables
-
-```
-source env/bin/activate
-export APPROOVA_DISCORD_TOKEN=9999
-export APPROOVA_DB_PATH=$(pwd)/sqlite.db
-python src/bot.py
-```
-
-## docker-compose
-
-You should update your docker-compose to `build: .` instead of `image: alex4108/approova:version` if you want to test the build in Docker.
+This project uses cgo for sqlite connection.  You can find build instructions for non-x86 architectures in [this project](https://github.com/mattn/go-sqlite3).
 
 # Running in Production
 
@@ -101,7 +86,7 @@ There are a few variables in `deployment.yml.template` which get filled in by th
 
 You must deploy the PV's and PVC's in `pv.yml` once, before running any deployments.  
 
-You must deploy a secret that the pod will use for the Discord Bot Token: 
+You must deploy a secret that the pod will use for the Discord Bot Token:
 `kubectl create secret generic approova-environment-discord --from-literal=username="discord" --from-literal=password="${APPROOVA_DISCORD_TOKEN}"`
 
 Be sure to edit these configurations to match your environment's needs.
