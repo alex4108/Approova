@@ -3,16 +3,16 @@
 * `travis.sh`: Ran by travis-ci.  It runs script 1 for all pushes & PR's, and scripts 2 and 3 for pushes to `develop` or `master`.
 * `1-test.sh`: Installs the requirements via `pip` locally, and proceeds to test the bot.  Currently, this only checks the main `bot.py` starts.  
 * `2-build.sh`: Builds the docker container(s) for the project and pushes them to DockerHub.
-* `3-deploy-kube.sh`: Deploys the update to a kubernetes cluster. 
+* `3-deploy-kube.sh`: Deploys the update to a kubernetes cluster.
 * `travis-deploy.sh` Runs after a push to `master` to set versioning
 
 ## Testing
 
-The test only installs requirements via `pip` and runs the bot with `python3 bot.py`.
+The test simply tries to build the binary.
 
 The bot will exit because the `TRAVIS` environment variable will be set.
 
-This effectively performs a lint against `bot.py`, but doesn't provide for unit testing.
+This effectively performs a lint against `main.go`, but doesn't provide for unit testing.
 
 ## Build the Container
 
@@ -33,7 +33,7 @@ Be sure to modify the environment variables as noted in the script.
 ### Test & Build
 
 **You must be running on a linux based host to run the pipeline scripts.**
-__The host must be equipped with docker, qemu, and docker-buildx.  See .travis.yml for an example of what's needed in the host__
+**The host must be equipped with docker, qemu, and docker-buildx.  See .travis.yml for an example of what's needed in the host**
 
 You can set this environment variable to only build the `linux/amd64` arch: `export ONLY_LINUX="1'`
 You can set this environment variable to skip docker's push step: `export SKIP_PUSH="1'`
@@ -46,4 +46,3 @@ You must deploy two persistent volumes, named `approova-test-pv` and `approova-l
 The PVC only stores the sqlite database used by the bot.
 
 If you want to test the kubernetes deployment script, set these variables (and those above) and run `cd kube && bash deploy.sh`
-

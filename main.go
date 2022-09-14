@@ -25,9 +25,9 @@ func main() {
 	log.SetReportCaller(true)
 	log.SetLevel(log.DebugLevel)
 
-	Token, tokenExists := os.LookupEnv("APPROOVA_BOT_TOKEN")
+	Token, tokenExists := os.LookupEnv("APPROOVA_DISCORD_TOKEN")
 	if !tokenExists {
-		log.Fatal("APPROOVA_BOT_TOKEN is not set.  Exiting.")
+		log.Fatal("APPROOVA_DISCORD_TOKEN is not set.  Exiting.")
 		os.Exit(2)
 	}
 
@@ -371,7 +371,7 @@ func setPublicRole(s *discordgo.Session, m *discordgo.MessageCreate) {
 		log.Debugf("Owner validation passed for author %s in guild %s", m.Author.ID, m.GuildID)
 	}
 
-	inputRole := strings.Split(m.Content, " ")[1]
+	inputRole := strings.Join(strings.Split(m.Content, " ")[1:], " ")
 	log.Debugf("Setting public role to %s for guild %s", inputRole, m.GuildID)
 	if isLink(inputRole) {
 		inputRole = stripLink(inputRole)
@@ -429,7 +429,7 @@ func setApproverRole(s *discordgo.Session, m *discordgo.MessageCreate) {
 		log.Debugf("Owner validation passed for author %s in guild %s", m.Author.ID, m.GuildID)
 	}
 
-	inputRole := strings.Split(m.Content, " ")[1]
+	inputRole := strings.Join(strings.Split(m.Content, " ")[1:], "")
 	log.Debugf("Setting approver role to %s for guild %s", inputRole, m.GuildID)
 	if isLink(inputRole) {
 		inputRole = stripLink(inputRole)
