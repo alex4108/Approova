@@ -22,6 +22,10 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Login to docker registry
         run: echo '${{ secrets.DOCKER_PASSWORD }}' docker login -u {{ secrets.DOCKER_USER }} --password-stdin
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
       - name: Build the Docker image
         run: export APPROOVA_TAG='${{steps.tag_version.outputs.new_tag}}' && make docker-release
       - name: Create a GitHub release
