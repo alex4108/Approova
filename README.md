@@ -45,7 +45,7 @@ At this point, Approova will monitor for new joins to the Guild and execute the 
 
 # Running in Development
 
-The master branch is the latest working copy of the project. It should be considered unstable.
+The master branch is the latest working copy of the project. It should be considered unstable.  Use a latest [Release](https://github.com/alex4108/Approova/releases) for a stable version.
 
 * Create a Discord Bot Token as outlined in the [Production Notes](#Production-Notes) section.
 
