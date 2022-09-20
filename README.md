@@ -1,7 +1,7 @@
 # Approova Discord Bot
 
-[![Build Status](https://travis-ci.com/alex4108/Approova.svg?branch=master)](https://travis-ci.com/alex4108/Approova)
-[![GitHub issues](https://img.shields.io/github/issues/alex4108/Approova)](https://github.com/alex4108/Approova/issues)
+[![Test](https://github.com/alex4108/Approova/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/alex4108/Approova/actions/workflows/test.yml)
+[![Release](https://github.com/alex4108/Approova/actions/workflows/release.yml/badge.svg?branch=master)](https://github.com/alex4108/Approova/actions/workflows/release.yml)
 [![GitHub forks](https://img.shields.io/github/forks/alex4108/Approova)](https://github.com/alex4108/Approova/network)
 [![GitHub stars](https://img.shields.io/github/stars/alex4108/Approova)](https://github.com/alex4108/Approova/stargazers)
 ![GitHub contributors](https://img.shields.io/github/contributors/alex4108/Approova)
