@@ -27,6 +27,7 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: managed-csi
+  volumeName: approova-live-pv
 ---
 apiVersion: apps/v1
 kind: Deployment
