@@ -1,9 +1,10 @@
 apiVersion: v1
 kind: PersistentVolume
+metadata:
   name: approova-live-pv
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   capacity:
     storage: 1Gi
   csi:
@@ -21,7 +22,7 @@ metadata:
   name: approova-live-pvc
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
@@ -44,9 +45,9 @@ spec:
         name: approova-live
     spec:
       volumes:
-      - name: approova-live-content
-        persistentVolumeClaim:
-          claimName: approova-live-pvc
+        - name: approova-live-content
+          persistentVolumeClaim:
+            claimName: approova-live-pvc
       restartPolicy: Always
       tolerations:
         - key: "node.kubernetes.io/unreachable"
@@ -58,14 +59,14 @@ spec:
           effect: "NoExecute"
           tolerationSeconds: 10
       containers:
-      - name: approova-live
-        image: alex4108/approova:GIT_SHA
-        volumeMounts:
-        - mountPath: "/content"
-          name: approova-live-content
-        env:
-        - name: APPROOVA_DISCORD_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: approova-live-discord
-              key: password
+        - name: approova-live
+          image: alex4108/approova:GIT_SHA
+          volumeMounts:
+            - mountPath: "/content"
+              name: approova-live-content
+          env:
+            - name: APPROOVA_DISCORD_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: approova-live-discord
+                  key: password
