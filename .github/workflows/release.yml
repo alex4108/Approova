@@ -39,7 +39,7 @@ jobs:
       - name: Setup Kubectl
         uses: Azure/setup-kubectl@master
       - name: Login to Azure
-      - uses: azure/aks-set-context@v1
+        uses: azure/aks-set-context@v1
         with:
           creds: "${{ secrets.AZURE_CREDENTIALS }}"
           resource-group: "k8s-homelab"
