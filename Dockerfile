@@ -3,7 +3,9 @@ RUN apk update
 RUN apk upgrade
 RUN apk add --update go gcc g++
 WORKDIR /app
-COPY ./src /app
+COPY ./main.go /app
+COPY ./go.mod /app
+COPY ./go.sum /app
 RUN go install github.com/mattn/go-sqlite3
 RUN CGO_ENABLED=1 GOOS=linux go build -o ./approova
 

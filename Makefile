@@ -6,7 +6,7 @@ endif
 
 build:
 	export CGO_ENABLED=1
-	cd src/ && go install github.com/mattn/go-sqlite3 && go build -o ../bin/approova
+	go install github.com/mattn/go-sqlite3 && go build -o ../bin/approova
 
 docker: build
 	docker build -t $(APPROOVA_TAG) .
