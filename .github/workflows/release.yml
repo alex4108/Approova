@@ -35,12 +35,6 @@ jobs:
         run: make test
       - name: Build the Docker image
         run: export APPROOVA_TAG='${{steps.tag_version.outputs.new_tag}}' && make docker-release
-      - name: Create a GitHub release
-        uses: ncipollo/release-action@v1
-        with:
-          tag: ${{ steps.tag_version.outputs.new_tag }}
-          name: Release ${{ steps.tag_version.outputs.new_tag }}
-          body: "${{ steps.tag_version.outputs.changelog }}\n\nContainer URI: hub.docker.com/alex4108/approova:${{steps.tag_version.outputs.new_tag}}"
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -66,3 +60,9 @@ jobs:
           manifests: |
             kube-manifest.yml
           images: "alex4108/approova:${{steps.tag_version.outputs.new_tag}}"
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: "${{ steps.tag_version.outputs.changelog }}\n\nContainer URI: hub.docker.com/alex4108/approova:${{steps.tag_version.outputs.new_tag}}"
