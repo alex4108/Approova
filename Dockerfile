@@ -5,4 +5,6 @@ RUN apk add sqlite
 RUN mkdir -p /app/
 RUN mkdir -p /content/
 COPY ./bin/approova /app/approova
+RUN chmod +x /app/approova
+
 CMD ["/app/approova"]
