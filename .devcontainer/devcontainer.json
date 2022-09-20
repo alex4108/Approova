@@ -10,7 +10,6 @@
     "shutdownAction": "stopCompose",
     "postCreateCommand": "~/.windows.sh && go mod download && go mod tidy",
     "workspaceFolder": "/workspace",
-    // "overrideCommand": "",
     "extensions": [
         "golang.go",
         "eamodio.gitlens", // IDE Git information

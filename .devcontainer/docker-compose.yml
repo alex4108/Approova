@@ -22,7 +22,6 @@ services:
       - ~/.kube:/root/.kube:z
     environment:
       - TZ=
-      - WORKSPACE_PATH=${PWD}
       - CGO_ENABLED=1
     cap_add:
       # For debugging with dlv

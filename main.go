@@ -25,6 +25,12 @@ func main() {
 	log.SetReportCaller(true)
 	log.SetLevel(log.DebugLevel)
 
+	InCI, InCIExist := os.LookupEnv("CI")
+	if InCIExist && InCI == "true" {
+		log.Fatal("Running in CI.  This proves functionality?")
+		os.Exit(0)
+	}
+
 	Token, tokenExists := os.LookupEnv("APPROOVA_DISCORD_TOKEN")
 	if !tokenExists {
 		log.Fatal("APPROOVA_DISCORD_TOKEN is not set.  Exiting.")

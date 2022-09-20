@@ -7,4 +7,4 @@ RUN mkdir -p /content/
 COPY ./bin/approova /app/approova
 RUN chmod +x /app/approova
 
-CMD ["/app/approova"]
+ENTRYPOINT ["/bin/sh"]
