@@ -57,7 +57,7 @@ jobs:
           cluster-name: "homelab"
         id: login
       - name: Deploy to Kubernetes
-        uses: Azure/k8s-deploy@v3.1
+        uses: Azure/k8s-deploy@v4.4
         with:
           action: "deploy"
           namespace: "default"
