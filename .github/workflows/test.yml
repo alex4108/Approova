@@ -1,17 +1,18 @@
 name: Tests
 
+permissions: "read-all"
+
 on:
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Run golang compilation check
-      run: make build
-    - name: Build docker image
-      run: make docker
+      - uses: actions/checkout@v3
+      - name: Run golang compilation check
+        run: make build
+      - name: Build docker image
+        run: make docker

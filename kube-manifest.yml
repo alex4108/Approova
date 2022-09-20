@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: PersistentVolume
+  name: approova-live-pv
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  csi:
+    driver: disk.csi.azure.com
+    volumeAttributes:
+      fsType: ext4
+    volumeHandle: /subscriptions/4a86f8dc-2530-4d62-85c6-15101ae09422/resourceGroups/k8s-homelab/providers/Microsoft.Compute/disks/approova-live
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: managed-csi
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: approova-live-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: managed-csi
+  volumeMode: Filesystem
+  volumeName: approova-live-pv
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: approova-live
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: approova-live
+  template:
+    metadata:
+      labels:
+        name: approova-live
+    spec:
+      volumes:
+      - name: approova-live-content
+        persistentVolumeClaim:
+          claimName: approova-live-pvc
+      restartPolicy: Always
+      tolerations:
+        - key: "node.kubernetes.io/unreachable"
+          operator: "Exists"
+          effect: "NoExecute"
+          tolerationSeconds: 10
+        - key: "node.kubernetes.io/not-ready"
+          operator: "Exists"
+          effect: "NoExecute"
+          tolerationSeconds: 10
+      containers:
+      - name: approova-live
+        image: alex4108/approova:GIT_SHA
+        volumeMounts:
+        - mountPath: "/content"
+          name: approova-live-content
+        env:
+        - name: APPROOVA_DISCORD_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: approova-live-discord
+              key: password

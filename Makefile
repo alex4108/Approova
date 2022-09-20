@@ -1,11 +1,11 @@
 PHONY: .build
 
-ifndef GITHUB_SHA
-override GITHUB_SHA = approova
+ifndef APPROOVA_TAG
+override APPROOVA_TAG = approova
 endif
 
 build:
 	go build -o ./bin/approova
 
 docker: build
-	docker build -t $(GITHUB_SHA) .
+	docker build -t $(APPROOVA_TAG) .
