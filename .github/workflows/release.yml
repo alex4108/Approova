@@ -6,9 +6,11 @@ on:
 
 permissions: "write-all"
 
+concurrency:
+  group: "release"
+  cancel-in-progress: true
+
 jobs:
-  # build-pages:
-  #   runs-on: ubuntu-latest
   build:
     runs-on: ubuntu-latest
 
@@ -37,6 +39,9 @@ jobs:
           tag: ${{ steps.tag_version.outputs.new_tag }}
           name: Release ${{ steps.tag_version.outputs.new_tag }}
           body: "${{ steps.tag_version.outputs.changelog }}\n\nContainer URI: hub.docker.com/alex4108/approova:${{steps.tag_version.outputs.new_tag}}"
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
       - name: Setup Kubectl
         uses: Azure/setup-kubectl@v3
       - name: Login to Azure
