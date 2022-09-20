@@ -1,1 +1,0 @@
-See `scripts/README.md`

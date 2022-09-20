@@ -1,0 +1,56 @@
+name: Release
+
+on:
+  push:
+    branches: ["master"]
+
+permissions: "write-all"
+
+jobs:
+  # build-pages:
+  #   runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Login to docker registry
+        env:
+          DOCKER_USER: "{{ secrets.DOCKER_USER }}"
+          DOCKER_PASSWORD: "{{ secrets.DOCKER_PASSWORD }}"
+        run: |
+          docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
+      - name: Build the Docker image
+        run: export APPROOVA_TAG='${{steps.tag_version.outputs.new_tag}}' && make docker
+      - name: Push the Docker image
+        run: docker push alex4108/${DOCKER_USER}:${{steps.tag_version.outputs.new_tag}}
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: "${{ steps.tag_version.outputs.changelog }}\n\nContainer URI: hub.docker.com/alex4108/approova:${{steps.tag_version.outputs.new_tag}}"
+      - name: Setup Kubectl
+        uses: Azure/setup-kubectl@master
+      - name: Login to Azure
+      - uses: azure/aks-set-context@v1
+        with:
+          creds: "${{ secrets.AZURE_CREDENTIALS }}"
+          resource-group: "k8s-homelab"
+          cluster-name: "homelab"
+        id: login
+      - name: Deploy to Kubernetes
+        uses: Azure/k8s-deploy@v3.1
+        with:
+          action: "deploy"
+          namespace: "default"
+          strategy: "basic"
+          manifests: |
+            kube-manifest.yml
+          images: "alex4108/approova:${{steps.tag_version.outputs.new_tag}}"
