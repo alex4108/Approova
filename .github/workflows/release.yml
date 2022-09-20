@@ -21,7 +21,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Login to docker registry
-        run: echo '${{ secrets.DOCKER_PASSWORD }}' docker login -u {{ secrets.DOCKER_USER }} --password-stdin
+        run: echo '${{secrets.DOCKER_PASSWORD}}' docker login -u ${{secrets.DOCKER_USER}} --password-stdin
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
