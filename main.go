@@ -653,7 +653,7 @@ func pingCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 	now := time.Now()
 	latency := ""
 	if timestampFieldExists(m) {
-		diff := m.Timestamp.Sub(now)
+		diff := now.Sub(m.Timestamp)
 		latency = "(" + strconv.Itoa(int(diff.Milliseconds())) + " ms)"
 	}
 	respond(s, m.ChannelID, "Pong! "+latency)

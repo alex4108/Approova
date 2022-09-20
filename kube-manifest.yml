@@ -1,34 +1,3 @@
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: approova-live-pv
-spec:
-  accessModes:
-    - ReadWriteOnce
-  capacity:
-    storage: 1Gi
-  csi:
-    driver: disk.csi.azure.com
-    volumeAttributes:
-      fsType: ext4
-    volumeHandle: /subscriptions/4a86f8dc-2530-4d62-85c6-15101ae09422/resourceGroups/k8s-homelab/providers/Microsoft.Compute/disks/approova-live
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: managed-csi
-  volumeMode: Filesystem
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: approova-live-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: managed-csi
-  volumeName: approova-live-pv
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
