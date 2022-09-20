@@ -27,13 +27,13 @@ func main() {
 
 	InCI, InCIExist := os.LookupEnv("CI")
 	if InCIExist && InCI == "true" {
-		log.Fatal("Running in CI.  This proves functionality?")
+		log.Info("Running in CI.  This proves functionality?")
 		os.Exit(0)
 	}
 
 	Token, tokenExists := os.LookupEnv("APPROOVA_DISCORD_TOKEN")
 	if !tokenExists {
-		log.Fatal("APPROOVA_DISCORD_TOKEN is not set.  Exiting.")
+		log.Error("APPROOVA_DISCORD_TOKEN is not set.  Exiting.")
 		os.Exit(2)
 	}
 
@@ -43,7 +43,7 @@ func main() {
 	// Create a new Discord session using the provided bot token.
 	dg, err := discordgo.New("Bot " + Token)
 	if err != nil {
-		log.Fatal("error creating Discord session,", err)
+		log.Error("error creating Discord session,", err)
 		os.Exit(3)
 	}
 
@@ -56,7 +56,7 @@ func main() {
 	// Open a websocket connection to Discord and begin listening.
 	err = dg.Open()
 	if err != nil {
-		log.Fatal("Error opening websocket connection,", err)
+		log.Error("Error opening websocket connection,", err)
 		os.Exit(4)
 	}
 
@@ -81,7 +81,7 @@ func setupDb() {
 	if _, err := os.Stat(db_path); os.IsNotExist(err) {
 		file, err := os.Create(db_path)
 		if err != nil {
-			log.Fatal("Error creating database file,", err)
+			log.Error("Error creating database file,", err)
 			os.Exit(5)
 		}
 		file.Close()
@@ -89,7 +89,7 @@ func setupDb() {
 
 	db, err := sql.Open("sqlite3", db_path)
 	if err != nil {
-		log.Fatal("Error opening database", err)
+		log.Error("Error opening database", err)
 	}
 	log.Debug("Database file opened")
 	DB = db
@@ -98,7 +98,7 @@ func setupDb() {
 	log.Debug("Setting up database schema")
 	err = setupDbSchema()
 	if err != nil {
-		log.Fatal("Error setting up database schema,", err)
+		log.Error("Error setting up database schema,", err)
 		os.Exit(6)
 	}
 	log.Debug("Schema setup completed")
