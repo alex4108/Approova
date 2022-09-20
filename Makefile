@@ -5,9 +5,8 @@ override APPROOVA_TAG = approova
 endif
 
 build:
-	go install github.com/mattn/go-sqlite3
 	export CGO_ENABLED=1
-	go build -o ./bin/approova
+	cd src/ && go install github.com/mattn/go-sqlite3 && go build -o ../bin/approova
 
 docker: build
 	docker build -t $(APPROOVA_TAG) .

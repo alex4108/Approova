@@ -36,6 +36,7 @@ metadata:
   name: approova-live
 spec:
   replicas: 1
+  minReadySeconds: 60
   selector:
     matchLabels:
       name: approova-live
