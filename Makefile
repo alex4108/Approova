@@ -1,4 +1,4 @@
-PHONY: .build
+PHONY: .build .docker .docker-release
 
 ifndef APPROOVA_TAG
 override APPROOVA_TAG = approova
