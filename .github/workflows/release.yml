@@ -69,6 +69,8 @@ jobs:
           manifests: |
             kube-manifest.yml
           images: "alex4108/approova:${{needs.build.outputs.tag}}"
+      # TODO if deploy failed, `kubectl rollout undo Deployment/approovalive`
+      # TODO if deploy failed, don't create release.
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         with:
