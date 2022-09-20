@@ -1,0 +1,37 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Login to docker registry
+      env:
+        DOCKER_USER: "{{ secrets.DOCKER_USER }}"
+        DOCKER_PASSWORD: "{{ secrets.DOCKER_PASSWORD }}"
+      run: |
+        docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
+    - name: Build the Docker image
+      run: make docker
+    - name: Push the Docker image
+      run: docker push alex4108/${DOCKER_USER}:{{ git.sha }}
+    # TODO Create release in kubectl
+    - name: Setup Kubectl
+      uses: Azure/setup-kubectl@master
+    - uses: azure/aks-set-context@v1
+      with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
+          resource-group: 'k8s-homelab'
+          cluster-name: 'homelab'
+      id: login
+    - uses: Azure/k8s-deploy@v3.1
+      with:
+       namespace: 'default'
+       manifests: |
+          kube-manifest.yml
+       images: 'alex4108/approova:{{ git.sha }}'
