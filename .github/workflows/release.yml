@@ -40,6 +40,7 @@ jobs:
           name: Release ${{ steps.tag_version.outputs.new_tag }}
           body: "${{ steps.tag_version.outputs.changelog }}\n\nContainer URI: hub.docker.com/alex4108/approova:${{steps.tag_version.outputs.new_tag}}"
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Setup Kubectl
