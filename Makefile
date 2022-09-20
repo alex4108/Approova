@@ -12,7 +12,7 @@ docker: build
 	docker build -t $(APPROOVA_TAG) .
 
 docker-release: build
-	docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t alex4108/approova:$(APPROOVA_TAG) --push .
+	docker buildx build --platform linux/amd64 -t alex4108/approova:$(APPROOVA_TAG) --push .
 
 test: docker
 	docker run --rm -e CI=true $(APPROOVA_TAG)
