@@ -11,4 +11,4 @@ docker: build
 	docker build -t $(APPROOVA_TAG) .
 
 docker-release: build
-	docker buildx build --use --platform linux/amd64,linux/arm64,linux/arm/v7 -t alex4108/approova:$(APPROOVA_TAG) --push .
+	docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t alex4108/approova:$(APPROOVA_TAG) --push .
