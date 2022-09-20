@@ -27,7 +27,7 @@ jobs:
         run: |
           docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
       - name: Build the Docker image
-        run: export APPROOVA_TAG='' && make docker
+        run: export APPROOVA_TAG='${{steps.tag_version.outputs.new_tag}}' && make docker
       - name: Push the Docker image
         run: docker push alex4108/${DOCKER_USER}:${{steps.tag_version.outputs.new_tag}}
       - name: Create a GitHub release
