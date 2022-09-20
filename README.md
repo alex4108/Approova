@@ -1,6 +1,6 @@
 # Approova Discord Bot
 
-[![Test](https://github.com/alex4108/Approova/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/alex4108/Approova/actions/workflows/test.yml)
+[![Tests](https://github.com/alex4108/Approova/actions/workflows/test.yml/badge.svg)](https://github.com/alex4108/Approova/actions/workflows/test.yml)
 [![Release](https://github.com/alex4108/Approova/actions/workflows/release.yml/badge.svg?branch=master)](https://github.com/alex4108/Approova/actions/workflows/release.yml)
 [![GitHub forks](https://img.shields.io/github/forks/alex4108/Approova)](https://github.com/alex4108/Approova/network)
 [![GitHub stars](https://img.shields.io/github/stars/alex4108/Approova)](https://github.com/alex4108/Approova/stargazers)
