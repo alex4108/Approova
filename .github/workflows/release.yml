@@ -31,6 +31,8 @@ jobs:
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
+      - name: Run Tests
+        run: make test
       - name: Build the Docker image
         run: export APPROOVA_TAG='${{steps.tag_version.outputs.new_tag}}' && make docker-release
       - name: Create a GitHub release
@@ -43,6 +45,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
       - name: Setup Kubectl
         uses: Azure/setup-kubectl@v3
       - name: Login to Azure
